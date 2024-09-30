@@ -5,10 +5,14 @@ import mongoose from "mongoose";
 import { Auth } from "./routes/Auth.js";
 import { UserRouter } from "./routes/Users.js";
 import { PostRouter } from "./routes/Posts.js";
-import { WebSocketServer } from 'ws'; // Use WebSocketServer explicitly for ES modules
+import path from 'path'
+import { fileURLToPath } from 'url';
 
 const app = express();
 dotenv.config()
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const PORT = process.env.PORT
 
@@ -22,6 +26,13 @@ app.get("/", async (req, res) => {
 app.use("/auth", Auth)
 app.use("/users", UserRouter)
 app.use("/posts", PostRouter)
+
+app.use(express.static(path.join(__dirname, 'client/build')));
+
+// Catch-all handler to send index.html for any other route
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running at PORT ${PORT}`);
