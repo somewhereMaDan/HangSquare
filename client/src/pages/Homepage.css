@@ -1,0 +1,20 @@
+.HomePage {
+  display: flex;
+  justify-content: center;
+  margin-top: 2%;
+  margin-left: 2%;
+  margin-right: 2%;
+}
+.Feed-Section {
+  display: flex;
+  flex-direction: column;
+}
+
+.Feed-Post-Section {
+  margin-left: 2vw;
+  margin-bottom: 2%;
+  /* width: 40vw; */
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  border-radius: 13px;
+  padding: 2vh 2vw;
+}

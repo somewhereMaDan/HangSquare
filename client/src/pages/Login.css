@@ -1,0 +1,125 @@
+* {
+  box-sizing: border-box !important;
+}
+.LoginPage {
+  margin-top: 5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+}
+
+
+
+.Login-Title,
+.Register-Title {
+  color: black !important;
+  font-weight: bold !important;
+  margin: 0 !important;
+  font-size: large;
+}
+
+.Login-Page-btn,
+.ghost {
+  border-radius: 20px !important;
+  border: 1px solid black !important;
+  background-color: black !important;
+  color: #ffffff !important;
+  font-size: 12px !important;
+  font-weight: bold !important;
+  padding: 12px 45px !important;
+  letter-spacing: 1px !important;
+  text-transform: uppercase !important;
+  transition: transform 80ms ease-in !important;
+  margin-top: 10px !important;
+}
+
+.Login-Page-btn:active,
+.ghost {
+  transform: scale(0.95) !important;
+}
+
+.Login-Page-btn:focus,
+.ghost {
+  outline: none !important;
+}
+
+button.ghost {
+  background-color: transparent !important;
+  color: black !important;
+  border-color: #ff4b2b !important;
+}
+
+form {
+  background-color: #ffffff !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-direction: column !important;
+  padding: 0 50px !important;
+  height: 100% !important;
+  text-align: center !important;
+}
+
+input {
+  background-color: #eee !important;
+  color: black !important;
+  border: none !important;
+  padding: 12px 15px !important;
+  margin: 8px 0 !important;
+  width: 100% !important;
+}
+
+.container {
+  position: relative !important;
+  background-color: #fff !important;
+  border-radius: 10px !important;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25) !important;
+  overflow: hidden !important;
+  width: 420px !important;
+  height: 770px !important;
+}
+
+.form-container {
+  position: absolute !important;
+  top: 0 !important;
+  height: 100% !important;
+  transition: all 0.6s ease-in-out !important;
+  width: 100% !important;
+}
+
+.sign-in-container {
+  left: 0 !important;
+  z-index: 2 !important;
+}
+
+.container.right-panel-active .sign-in-container {
+  transform: translateX(100%) !important;
+}
+
+.sign-up-container {
+  left: 0 !important;
+  opacity: 0 !important;
+  z-index: 1 !important;
+}
+
+.container.right-panel-active .sign-up-container {
+  transform: translateX(0) !important;
+  opacity: 1 !important;
+  z-index: 5 !important;
+  animation: show 0.6s !important;
+}
+
+@keyframes show {
+  0%,
+  49.99% {
+    opacity: 0 !important;
+    z-index: 1 !important;
+  }
+
+  50%,
+  100% {
+    opacity: 1 !important;
+    z-index: 5 !important;
+  }
+}

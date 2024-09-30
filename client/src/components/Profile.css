@@ -1,0 +1,60 @@
+.whole-profile-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 40vh;
+  width: 20vw;
+}
+.profile-first-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* width: 80%; */
+  /* width: 20vw; */
+}
+
+.profile-information,
+.friend-list {
+  padding: 2vh 2vw;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  border-radius: 13px;
+}
+
+.profile-information{
+  margin-bottom: 2vh;
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.avatar-username {
+  display: flex;
+}
+
+.user-name-friends {
+  padding-left: 1vw;
+}
+
+.button-52 {
+  margin-left: 30%;
+  padding: 5px 8px 5px;
+  width: 7vw;
+  font-size: 11px;
+  font-weight: 200;
+  letter-spacing: 1px;
+  outline: 0;
+  border: 1px solid black;
+  color: black;
+  cursor: pointer;
+  position: relative;
+  background-color: rgba(0, 0, 0, 0);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-52:hover {
+  background-color: #ADD8E6;
+}
