@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { Navbar } from './components/Navbar';
 import Homepage from './pages/Homepage';
 import RedirectProfile from './components/RedirectProfile';
+import { useCookies } from 'react-cookie'
 
 function App() {
   return (
@@ -19,14 +20,15 @@ function App() {
 }
 
 function Content() {
+  const [cookies, setCookie] = useCookies(["access_Token"]);
   const location = useLocation(); // Moved useLocation inside the BrowserRouter
 
   return (
     <>
       {location.pathname !== '/' && <Navbar />} {/* Conditionally render Navbar */}
       <Routes>
-        <Route path='/' element={<Login />} />
-        <Route path='/home' element={<Homepage />} />
+        {/* <Route path='/' element={<Login />} /> */}
+        {cookies.access_Token ? <Route path='/home' element={<Homepage />} /> : <Route path='/' element={<Login />} />}
         <Route path='/redirectProfile' element={<RedirectProfile />} />
       </Routes>
     </>

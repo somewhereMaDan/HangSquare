@@ -12,6 +12,7 @@ import axios from 'axios'
 import { userGetId } from '@/hooks/userGetId'
 import { ImgDb } from '../Firebase'
 import { toast } from 'sonner';
+import { useCookies } from 'react-cookie';
 
 
 function FeedPostSection() {
@@ -19,10 +20,13 @@ function FeedPostSection() {
   const [UserInfo, setUserInfo] = useState([])
   const [ProfilePicture, setProfilePicture] = useState('')
   const [Description, setDescription] = useState('')
+  const [cookies, setCookie] = useCookies(["access_Token"]);
 
   const ProfileInfo = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/${UserId}`)
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/${UserId}`,
+        { headers: { authorization: cookies.access_Token } }
+      )
       setUserInfo([response.data.UserInfo])
     } catch (error) {
       console.log(error);
@@ -41,7 +45,7 @@ function FeedPostSection() {
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/posts/createPost/${UserId}`, {
         Description: Description,
         PicturePath: downloadURL
-      })
+      }, { headers: { authorization: cookies.access_Token } })
       toast.success(response.data.message)
     } catch (err) {
       console.log(err);

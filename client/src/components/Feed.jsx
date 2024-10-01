@@ -18,17 +18,21 @@ import { toast } from 'sonner'
 import AddCommentDialog from './AddCommentDialog'
 import DeleteCommentPic from '../assets/delete.png'
 import { useNavigate } from 'react-router-dom'
+import { useCookies } from 'react-cookie';
 
 function Feed() {
   const UserId = userGetId();
   const [PostsData, setPostsData] = useState([])
   const navigate = useNavigate()
+  const [cookies, setCookie] = useCookies(["access_Token"]);
 
   console.log("post data: ", PostsData);
 
   const Posts = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/posts/allPosts`)
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/posts/allPosts`,
+        { headers: { authorization: cookies.access_Token } }
+      )
       setPostsData(response.data.allPosts)
     } catch (err) {
       console.log(err);
@@ -38,7 +42,9 @@ function Feed() {
   const RemoveAddFriend = async (FriendId) => {
     console.log("remove friend clicked");
     try {
-      const response = await axios.patch(`${import.meta.env.VITE_API_URL}/users/${UserId}/addRemove/${FriendId}`)
+      const response = await axios.patch(`${import.meta.env.VITE_API_URL}/users/${UserId}/addRemove/${FriendId}`,
+        { headers: { authorization: cookies.access_Token } }
+      )
       toast.success(response.data.message)
     } catch (err) {
       console.log(err);
@@ -47,7 +53,9 @@ function Feed() {
 
   const RemoveAddLike = async (PostId) => {
     try {
-      const response = await axios.patch(`${import.meta.env.VITE_API_URL}/posts/${UserId}/UpdateLike/${PostId}`)
+      const response = await axios.patch(`${import.meta.env.VITE_API_URL}/posts/${UserId}/UpdateLike/${PostId}`,
+        { headers: { authorization: cookies.access_Token } }
+      )
       console.log("Like updated: ", response.data.post);
       toast.success(response.data.message)
     } catch (err) {
@@ -62,7 +70,7 @@ function Feed() {
       console.log("user id : ", UserId);
       const response = await axios.patch(`${import.meta.env.VITE_API_URL}/posts/${UserId}/DeleteComment/${PostId}`, {
         CommentId: commentId
-      })
+      }, { headers: { authorization: cookies.access_Token } })
       toast.success(response.data.message)
     } catch (err) {
       console.log(err);

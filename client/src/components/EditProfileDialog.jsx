@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label"
 import axios from 'axios'
 import { userGetId } from '@/hooks/userGetId'
 import { toast } from 'sonner'
+import { useCookies } from 'react-cookie';
 
 function EditProfileDialog() {
   const UserId = userGetId()
@@ -22,6 +23,7 @@ function EditProfileDialog() {
   const [Linkdin, setLinkdin] = useState('')
   const [Insta, setInsta] = useState('')
   const [open, setOpen] = useState(false)  // Manage dialog state
+  const [cookies, setCookie] = useCookies(["access_Token"]);
 
   const EditProfile = async () => {
     try {
@@ -30,7 +32,7 @@ function EditProfileDialog() {
         Occupation: Occupation,
         Instagram: Insta,
         Linkdin: Linkdin
-      })
+      }, { headers: { authorization: cookies.access_Token } })
       setOpen(false)
       toast.success(response.data.message)
     } catch (err) {

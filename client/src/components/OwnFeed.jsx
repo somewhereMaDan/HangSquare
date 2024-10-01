@@ -27,6 +27,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useCookies } from 'react-cookie';
 
 
 function UserFeed({ RedirectUserId }) {
@@ -37,12 +38,15 @@ function UserFeed({ RedirectUserId }) {
     UserId = RedirectUserId
   }
   const [PostsData, setPostsData] = useState([])
+  const [cookies, setCookie] = useCookies(["access_Token"]);
 
   console.log("post data: ", PostsData);
 
   const Posts = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/posts/${UserId}`)
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/posts/${UserId}`,
+        { headers: { authorization: cookies.access_Token } }
+      )
       setPostsData(response.data.UserPosts)
     } catch (err) {
       console.log(err);
@@ -51,7 +55,9 @@ function UserFeed({ RedirectUserId }) {
 
   const RemoveAddLike = async (PostId) => {
     try {
-      const response = await axios.patch(`${import.meta.env.VITE_API_URL}/posts/${UserId}/UpdateLike/${PostId}`)
+      const response = await axios.patch(`${import.meta.env.VITE_API_URL}/posts/${UserId}/UpdateLike/${PostId}`,
+        { headers: { authorization: cookies.access_Token } }
+      )
       console.log("Like updated: ", response.data.post);
       toast.success(response.data.message)
     } catch (err) {
@@ -66,7 +72,7 @@ function UserFeed({ RedirectUserId }) {
       console.log("user id : ", UserId);
       const response = await axios.patch(`${import.meta.env.VITE_API_URL}/posts/${UserId}/DeleteComment/${PostId}`, {
         CommentId: commentId
-      })
+      }, { headers: { authorization: cookies.access_Token } })
       toast.success(response.data.message)
     } catch (err) {
       console.log(err);
@@ -75,9 +81,10 @@ function UserFeed({ RedirectUserId }) {
 
   const DeletePost = async (PostId) => {
     try {
+      console.log("deleting post");
       const response = await axios.patch(`${import.meta.env.VITE_API_URL}/posts/deletePost/${PostId}`, {
         UserId: UserId
-      })
+      }, { headers: { authorization: cookies.access_Token } })
       toast.success(response.data.message)
     } catch (err) {
       console.log(err);

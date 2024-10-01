@@ -34,7 +34,7 @@ export const Navbar = () => {
             <span style={{ fontSize: "24px", paddingBottom: "0.5vh" }}>HangSqaure</span>
           </Link>
           <Link to="/" className="nav__link" onClick={closeMenu}>
-            <button className='button-52'>
+            <button onClick={logout} className='button-52'>
               <span style={{ fontSize: "18px" }}>Logout</span>
             </button>
           </Link>

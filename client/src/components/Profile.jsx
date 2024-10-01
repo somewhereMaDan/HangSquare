@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-import { React, useState, useEffect } from 'react'
+import { React, useState, useEffect, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Separator } from "@/components/ui/separator"
 import axios from 'axios'
@@ -29,12 +29,16 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar"
 import EditProfileDialog from "./EditProfileDialog"
-
+import { useCookies } from 'react-cookie'
+import { TempContext } from '../Contexts/TempContext'
 
 function Profile({ RedirectUserId }) {
+  const { TempVar, setTempVar } = useContext(TempContext);
+
   const navigate = useNavigate();
   const [UserInfo, setUserInfo] = useState([])
   const [UserFriends, setUserFriends] = useState([])
+  const [cookies, setCookie] = useCookies(["access_Token"]);
   let UserId
 
   if (!RedirectUserId) {
@@ -46,7 +50,9 @@ function Profile({ RedirectUserId }) {
 
   const ProfileInfo = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/${UserId}`)
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/${UserId}`,
+        { headers: { authorization: cookies.access_Token } }
+      )
       setUserInfo([response.data.UserInfo])
     } catch (error) {
       console.log(error);
@@ -55,7 +61,9 @@ function Profile({ RedirectUserId }) {
 
   const GetUserFriends = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/${UserId}/friends`)
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/${UserId}/friends`,
+        { headers: { authorization: cookies.access_Token } }
+      )
       setUserFriends(response.data.FriendsArr);
     } catch (err) {
       console.log(err);
@@ -64,7 +72,9 @@ function Profile({ RedirectUserId }) {
 
   const RemoveFriend = async (FriendId) => {
     try {
-      const response = await axios.patch(`${import.meta.env.VITE_API_URL}/users/${UserId}/addRemove/${FriendId}`)
+      const response = await axios.patch(`${import.meta.env.VITE_API_URL}/users/${UserId}/addRemove/${FriendId}`,
+        { headers: { authorization: cookies.access_Token } }
+      )
       toast.success(response.data.message)
     } catch (err) {
       console.log(err);
@@ -158,8 +168,8 @@ function Profile({ RedirectUserId }) {
           {
             UserFriends.map((friend) => {
               return (
-                <div key={friend._id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                  <div >
+                <div key={friend._id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: '4%' }}>
+                  <div>
                     <div>{friend.firstName} {friend.lastName}</div>
                     <p className="text-sm text-muted-foreground">
                       {friend.Bio}

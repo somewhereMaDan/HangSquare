@@ -15,17 +15,19 @@ import PostComment from '../assets/comment.png'
 import axios from 'axios'
 import { userGetId } from '@/hooks/userGetId'
 import { toast } from 'sonner'
+import { useCookies } from 'react-cookie';
 
 function AddCommentDialog({ PostId }) {
   const [Comment, setComment] = useState('')
   const UserId = userGetId();
   const [open, setOpen] = useState(false)  // Manage dialog state
+  const [cookies, setCookie] = useCookies(["access_Token"]);
 
   const AddComment = async () => {
     try {
       const response = await axios.patch(`${import.meta.env.VITE_API_URL}/posts/${UserId}/AddComment/${PostId}`, {
         comment: Comment
-      })
+      }, { headers: { authorization: cookies.access_Token } })
       setOpen(false)
       toast.success(response.data.message)
     } catch (err) {

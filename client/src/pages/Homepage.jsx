@@ -3,30 +3,33 @@ import './Homepage.css'
 import Profile from '@/components/Profile'
 import Feed from '@/components/Feed'
 import Advertisment from '@/components/Advertisment'
-import axios from 'axios'
-import { userGetId } from '@/hooks/userGetId'
 import FeedPostSection from '@/components/FeedPostSection'
+import { TempContext } from '../Contexts/TempContext'
+
+
 
 export const GlobalContext = createContext();
 function Homepage() {
+  const [TempVar, setTempVar] = useState('Madan')
   return (
-    <div className='HomePage'>
-      <div className='UserProfile'>
-        <Profile />
-      </div>
-      <div className='Feed-Section'>
-        <div className='Feed-Post-Section'>
-          {/* <div>POST</div> */}
-          <FeedPostSection />
+    <TempContext.Provider value={{ TempVar, setTempVar }}>
+      <div className='HomePage'>
+        <div className='UserProfile'>
+          <Profile />
         </div>
-        <div>
-          <Feed />
+        <div className='Feed-Section'>
+          <div className='Feed-Post-Section'>
+            <FeedPostSection />
+          </div>
+          <div>
+            <Feed />
+          </div>
+        </div>
+        <div className='Advertisment'>
+          <Advertisment />
         </div>
       </div>
-      <div className='Advertisment'>
-        <Advertisment />
-      </div>
-    </div>
+    </TempContext.Provider>
   )
 }
 
