@@ -48,7 +48,7 @@ function Profile({ RedirectUserId }) {
   } else {
     UserId = RedirectUserId
   }
-  console.log("RedirectUserId from Profile.jsx", RedirectUserId);
+  // console.log("RedirectUserId from Profile.jsx", RedirectUserId);
 
   const ProfileInfo = async () => {
     try {

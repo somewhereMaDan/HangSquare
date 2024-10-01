@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from 'react'
+import { React, useState, useEffect, useContext } from 'react'
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -16,17 +16,45 @@ import axios from 'axios'
 import { userGetId } from '@/hooks/userGetId'
 import { toast } from 'sonner'
 import { useCookies } from 'react-cookie';
+import { v4 as uuidv4 } from 'uuid';
+import { TempContext } from '../Contexts/TempContext'
 
 function AddCommentDialog({ PostId }) {
+  const { TempVar, PostsData, setPostsData } = useContext(TempContext)
+  console.log("Value from homepage using useContext: ", TempVar);
   const [Comment, setComment] = useState('')
   const UserId = userGetId();
   const [open, setOpen] = useState(false)  // Manage dialog state
   const [cookies, setCookie] = useCookies(["access_Token"]);
 
+  // console.log("PostsData from AddCommentDialog: ", PostsData);
+
   const AddComment = async () => {
+    // we have to use useContext to get the PostsData here so we can use setPostsData(),
+    // in order to do that use useContext in homepage then feed and then here---
+    const commentId = uuidv4()
+    const updatedPosts = PostsData?.map((post) => {
+      const newComment = {
+        id: commentId, // Use UUID as the key
+        UserId,
+        Username: post.Owner.firstName + " " + post.Owner.lastName,
+        CommentText: Comment,
+        CreatedAt: new Date() // Current date
+      }
+      if (post) {
+        if (post._id === PostId) {
+          const updatedComment = { ...post.Comments, [commentId]: newComment };
+          return { ...post, Comments: updatedComment }
+        }
+      }
+      return post
+    })
+
+    setPostsData(updatedPosts)
     try {
       const response = await axios.patch(`${import.meta.env.VITE_API_URL}/posts/${UserId}/AddComment/${PostId}`, {
-        comment: Comment
+        comment: Comment,
+        CommentId: commentId
       }, { headers: { authorization: cookies.access_Token } })
       setOpen(false)
       toast.success(response.data.message)

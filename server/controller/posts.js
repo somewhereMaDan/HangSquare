@@ -112,7 +112,7 @@ export const AddRemoveLikes = async (req, res) => {
 }
 
 export const AddComment = async (req, res) => {
-  const { comment } = req.body
+  const { comment, CommentId } = req.body
   const { UserId, PostId } = req.params
 
   const user = await UserModel.findById(UserId)
@@ -122,10 +122,12 @@ export const AddComment = async (req, res) => {
     return res.status(404).json({ message: "Post not found" })
   }
 
-  const commentId = new mongoose.Types.ObjectId();
+  // const commentId = new mongoose.Types.ObjectId();
+  // need to change this get the "commentId" from frontend as use that as CommentId(Key) for Comments map(value)
+  // so that in frontend we can update the state 
 
   // Add the comment to the Comments map
-  post.Comments.set(commentId.toString(), {
+  post.Comments.set(CommentId.toString(), {
     UserId: UserId,
     Username: user.firstName + " " + user.lastName,
     CommentText: comment,

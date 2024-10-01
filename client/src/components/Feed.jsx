@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from 'react'
+import { React, useEffect, useState, useContext } from 'react'
 import './Feed.css'
 import axios from 'axios'
 import './Profile.css'
@@ -19,25 +19,27 @@ import AddCommentDialog from './AddCommentDialog'
 import DeleteCommentPic from '../assets/delete.png'
 import { useNavigate } from 'react-router-dom'
 import { useCookies } from 'react-cookie';
+import { TempContext } from '../Contexts/TempContext'
 
 function Feed() {
   const UserId = userGetId();
-  const [PostsData, setPostsData] = useState([])
+  const { PostsData, setPostsData } = useContext(TempContext)
+  // const [PostsData, setPostsData] = useState([])
   const navigate = useNavigate()
   const [cookies, setCookie] = useCookies(["access_Token"]);
 
   console.log("post data: ", PostsData);
 
-  const Posts = async () => {
-    try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/posts/allPosts`,
-        { headers: { authorization: cookies.access_Token } }
-      )
-      setPostsData(response.data.allPosts)
-    } catch (err) {
-      console.log(err);
-    }
-  }
+  // const Posts = async () => {
+  //   try {
+  //     const response = await axios.get(`${import.meta.env.VITE_API_URL}/posts/allPosts`,
+  //       { headers: { authorization: cookies.access_Token } }
+  //     )
+  //     setPostsData(response.data.allPosts)
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }
 
   const RemoveAddFriend = async (FriendId) => {
     console.log("remove friend clicked");
@@ -52,6 +54,18 @@ function Feed() {
   }
 
   const RemoveAddLike = async (PostId) => {
+    const updatedPosts = PostsData.map((post) => {
+      if (post) {
+        if (post._id === PostId) {
+          const UpdatedLikes = { ...post.Likes, [UserId]: !post.Likes[UserId] }
+          return { ...post, Likes: UpdatedLikes }
+        }
+      }
+      return post
+    })
+    setPostsData(updatedPosts)
+    // this above approch maintains Immutability and avoid Direct Mutation - Preferable when using state management libraries that require state to be immutable, as it helps prevent unintended side effects and makes debugging easier.
+
     try {
       const response = await axios.patch(`${import.meta.env.VITE_API_URL}/posts/${UserId}/UpdateLike/${PostId}`,
         { headers: { authorization: cookies.access_Token } }
@@ -64,6 +78,18 @@ function Feed() {
   }
 
   const DeleteComment = async (PostId, commentId) => {
+    const updatedPosts = PostsData?.map((post) => {
+      if (post._id === PostId) {
+        const CommentMap = { ...post.Comments }
+        console.log("Comment Map Object: ", CommentMap);
+        if (CommentMap[commentId]) {
+          delete CommentMap[commentId]
+        }
+        return { ...post, Comments: CommentMap }
+      }
+      return post
+    })
+    setPostsData(updatedPosts)
     try {
       console.log("post id: ", PostId);
       console.log("comment id: ", commentId);
@@ -80,10 +106,7 @@ function Feed() {
   const toggleRedirect = async (RedirectUserId) => {
     navigate('/redirectProfile', { state: { RedirectId: RedirectUserId } });
   }
-
-  useEffect(() => {
-    Posts()
-  }, [])
+  
   return (
     <div className='whole-feed-div'>
       {
@@ -165,6 +188,23 @@ function Feed() {
                     <p>No comments yet.</p>
                   ) : (
                     <ul>
+                      {/* Object.entries(): This function converts an object's key-value pairs into an array of arrays, where each inner array consists of [key, value]. In your case, Object.entries(post.Comments) would return something like this: */}
+                      {/* from this -
+
+                      post.Comments = {
+                        "commentId1": { UserId: "user1", Username: "John", CommentText: "Great post!", CreatedAt: "2023-09-29T14:21:00" },
+                        "commentId2": { UserId: "user2", Username: "Doe", CommentText: "Thanks for sharing!", CreatedAt: "2023-09-29T15:05:00" }
+                      }; */}
+
+
+                      {/* 
+                      To this -
+
+                      [
+                        ["commentId1", { UserId: "user1", Username: "John", CommentText: "Great post!", CreatedAt: "2023-09-29T14:21:00" }],
+                        ["commentId2", { UserId: "user2", Username: "Doe", CommentText: "Thanks for sharing!", CreatedAt: "2023-09-29T15:05:00" }]
+                      ] */}
+
                       {Object.entries(post.Comments).map(
                         ([commentId, commentData], Index) => (
                           <li key={commentId} className='comment-item'>
