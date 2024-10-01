@@ -7,7 +7,7 @@ import { useLocation } from 'react-router-dom';
 function RedirectProfile() {
   const location = useLocation();
   const RedirectUserId = location.state?.RedirectId;
-  console.log(RedirectUserId);
+  console.log("RedirectUserId from RedirectProfile.jsx: ", RedirectUserId);
 
   return (
     <div className='HomePage'>

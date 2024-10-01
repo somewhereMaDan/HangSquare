@@ -41,12 +41,14 @@ function Profile({ RedirectUserId }) {
   const [cookies, setCookie] = useCookies(["access_Token"]);
   let UserId
 
+  const LoggedUserId = userGetId()
+
   if (!RedirectUserId) {
     UserId = userGetId()
   } else {
     UserId = RedirectUserId
   }
-  console.log(RedirectUserId);
+  console.log("RedirectUserId from Profile.jsx", RedirectUserId);
 
   const ProfileInfo = async () => {
     try {
@@ -116,7 +118,7 @@ function Profile({ RedirectUserId }) {
                 </div>
                 <div>
                   {
-                    !RedirectUserId && <EditProfileDialog />
+                    LoggedUserId === UserId && <EditProfileDialog />
                   }
                 </div>
               </div>
@@ -177,7 +179,7 @@ function Profile({ RedirectUserId }) {
                   </div>
                   <div>
                     {
-                      !RedirectUserId && <button onClick={() => RemoveFriend(friend._id)}>
+                      LoggedUserId === RedirectUserId && <button onClick={() => RemoveFriend(friend._id)}>
                         <img style={{ height: "2.5vh", borderRadius: "5px" }} src={RemoveFriendPic}></img>
                       </button>
                     }
