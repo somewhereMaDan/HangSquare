@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const PostSchema = new mongoose.Schema({
   Owner: {
     type: String,
+    // type: mongoose.Schema.Types.ObjectId, // Change to ObjectId
     ref: 'users',
     required: true,
   },

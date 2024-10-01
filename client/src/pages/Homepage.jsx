@@ -1,20 +1,34 @@
 import { React, useState, useEffect, createContext } from 'react'
 import './Homepage.css'
-import Profile from '@/components/Profile'
 import Feed from '@/components/Feed'
 import Advertisment from '@/components/Advertisment'
 import FeedPostSection from '@/components/FeedPostSection'
 import { TempContext } from '../Contexts/TempContext'
 import { useCookies } from 'react-cookie'
 import axios from 'axios'
-
+import { userGetId } from '@/hooks/userGetId'
+import Profile from '@/components/Profile'
 
 
 export const GlobalContext = createContext();
 function Homepage() {
   const [TempVar, setTempVar] = useState('Madan')
   const [PostsData, setPostsData] = useState([])
+  const [UserInfo, setUserInfo] = useState([])
   const [cookies, setCookie] = useCookies(["access_Token"]);
+  const [UserFriends, setUserFriends] = useState([])
+  const UserId = userGetId()
+
+  const ProfileInfo = async () => {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/${UserId}`,
+        { headers: { authorization: cookies.access_Token } }
+      )
+      setUserInfo([response.data.UserInfo])
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const Posts = async () => {
     try {
@@ -27,15 +41,28 @@ function Homepage() {
     }
   }
 
+  const GetUserFriends = async () => {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/${UserId}/friends`,
+        { headers: { authorization: cookies.access_Token } }
+      )
+      setUserFriends(response.data.FriendsArr);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   useEffect(() => {
     Posts()
+    ProfileInfo()
+    GetUserFriends()
   }, [])
 
   return (
-    <TempContext.Provider value={{ TempVar, setTempVar, PostsData, setPostsData }}>
+    <TempContext.Provider value={{ TempVar, setTempVar, PostsData, setPostsData, UserInfo, setUserInfo, UserFriends, setUserFriends }}>
       <div className='HomePage'>
         <div className='UserProfile'>
-          <Profile />
+          <Profile></Profile>
         </div>
         <div className='Feed-Section'>
           <div className='Feed-Post-Section'>

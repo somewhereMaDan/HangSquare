@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from 'react'
+import { React, useState, useEffect, useContext } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -13,14 +13,16 @@ import { userGetId } from '@/hooks/userGetId'
 import { ImgDb } from '../Firebase'
 import { toast } from 'sonner';
 import { useCookies } from 'react-cookie';
+import { TempContext } from '../Contexts/TempContext'
 
 
 function FeedPostSection() {
   const UserId = userGetId()
-  const [UserInfo, setUserInfo] = useState([])
+  // const [UserInfo, setUserInfo] = useState([])
   const [ProfilePicture, setProfilePicture] = useState('')
   const [Description, setDescription] = useState('')
   const [cookies, setCookie] = useCookies(["access_Token"]);
+  const { PostsData, setPostsData, UserInfo, setUserInfo } = useContext(TempContext)
 
   const ProfileInfo = async () => {
     try {
@@ -39,7 +41,22 @@ function FeedPostSection() {
     const snapshot = await uploadBytes(ImgRef, ProfilePicture);
     // Step 3: Get the download URL for the uploaded image
     const downloadURL = await getDownloadURL(snapshot.ref);
-    console.log("Image URL:", downloadURL);
+    // console.log("Image URL:", downloadURL);
+
+    const updatedPosts = [
+      ...PostsData, {
+        Title : "",
+        Owner: UserId,
+        Description: Description,
+        PicturePath: downloadURL,
+        UserPicturePath: UserInfo[0].PicturePath,
+        Likes : [],
+        Comments : {},
+        Location : ""
+      }
+    ]
+
+    setPostsData(updatedPosts)
 
     try {
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/posts/createPost/${UserId}`, {
@@ -52,8 +69,10 @@ function FeedPostSection() {
     }
   }
   useEffect(() => {
-    ProfileInfo()
-  }, [])
+    if (UserId) {
+      ProfileInfo();
+    }
+  }, [UserId]);  // Add dependencies
 
   return (
     <div>
@@ -74,7 +93,7 @@ function FeedPostSection() {
                 <Input onChange={(e) => setProfilePicture(e.target.files[0])} id="picture" type="file" />
               </div>
               <div>
-                <Button onClick={() => CreateNewPost()} type="submit">Post</Button>
+                <Button onClick={() => CreateNewPost(user._id)} type="submit">Post</Button>
               </div>
             </div>
           )

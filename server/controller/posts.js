@@ -39,7 +39,9 @@ export const CreatePost = async (req, res) => {
       Description: Description || "",
       PicturePath: PicturePath || "",
       UserPicturePath: user.PicturePath || '',
-      Location: Location || ""
+      Location: Location || "",
+      Likes: [],
+      Comments: {}
     })
     await newPost.save()
     user.OwnPosts.push(newPost._id)
@@ -58,8 +60,8 @@ export const DeletePost = async (req, res) => {
 
     const post = await PostModel.findById(PostId)
 
-    console.log(post.Owner);
-    console.log(UserId);
+    console.log("post owner from Delete post: ", post.Owner);
+    console.log("User Id from Delete post: ", UserId);
 
     if (!post) {
       return res.status(403).json({ error: "Post not found" })

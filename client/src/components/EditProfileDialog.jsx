@@ -26,6 +26,7 @@ function EditProfileDialog() {
   const [cookies, setCookie] = useCookies(["access_Token"]);
 
   const EditProfile = async () => {
+    
     try {
       const response = await axios.patch(`${import.meta.env.VITE_API_URL}/users/${UserId}/CompleteProfile`, {
         Location: Location,
@@ -53,26 +54,6 @@ function EditProfileDialog() {
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
-            {/* <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="name" className="text-right">
-                    FirstName
-                  </Label>
-                  <Input
-                    id="name"
-                    defaultValue="Pedro Duarte"
-                    className="col-span-3"
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="name" className="text-right">
-                    LastName
-                  </Label>
-                  <Input
-                    id="name"
-                    defaultValue="Pedro Duarte"
-                    className="col-span-3"
-                  />
-                </div> */}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="Occupation" className="text-right">
                 Occupation

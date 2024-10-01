@@ -20,6 +20,7 @@ import DeleteCommentPic from '../assets/delete.png'
 import { useNavigate } from 'react-router-dom'
 import { useCookies } from 'react-cookie';
 import { TempContext } from '../Contexts/TempContext'
+import { v4 as uuidv4 } from 'uuid';
 
 function Feed() {
   const UserId = userGetId();
@@ -30,19 +31,26 @@ function Feed() {
 
   console.log("post data: ", PostsData);
 
-  // const Posts = async () => {
-  //   try {
-  //     const response = await axios.get(`${import.meta.env.VITE_API_URL}/posts/allPosts`,
-  //       { headers: { authorization: cookies.access_Token } }
-  //     )
-  //     setPostsData(response.data.allPosts)
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }
-
   const RemoveAddFriend = async (FriendId) => {
-    console.log("remove friend clicked");
+    const updatedPostsData = PostsData.map((post) => {
+      if (post.Owner._id === FriendId) {
+        // Toggle friendship status for both the current user and the post owner
+        const updatedOwnerFriends = post.Owner.Friends.includes(UserId)
+          ? post.Owner.Friends.filter((id) => id !== UserId)  // Remove current user from post owner's friends list
+          : [...post.Owner.Friends, UserId]; // Add current user to post owner's friends list
+
+        return {
+          ...post,
+          Owner: {
+            ...post.Owner,
+            Friends: updatedOwnerFriends,
+          },
+        };
+      }
+      return post;
+    });
+
+    setPostsData(updatedPostsData); // Update the state optimistically
     try {
       const response = await axios.patch(`${import.meta.env.VITE_API_URL}/users/${UserId}/addRemove/${FriendId}`,
         { headers: { authorization: cookies.access_Token } }
@@ -54,11 +62,17 @@ function Feed() {
   }
 
   const RemoveAddLike = async (PostId) => {
+    if (!PostId) {
+      console.error("PostId is undefined or invalid");
+      return;
+    }
     const updatedPosts = PostsData.map((post) => {
       if (post) {
         if (post._id === PostId) {
-          const UpdatedLikes = { ...post.Likes, [UserId]: !post.Likes[UserId] }
-          return { ...post, Likes: UpdatedLikes }
+          if (post.Likes) {
+            const UpdatedLikes = { ...post.Likes, [UserId]: !post?.Likes[UserId] }
+            return { ...post, Likes: UpdatedLikes }
+          }
         }
       }
       return post
@@ -70,7 +84,6 @@ function Feed() {
       const response = await axios.patch(`${import.meta.env.VITE_API_URL}/posts/${UserId}/UpdateLike/${PostId}`,
         { headers: { authorization: cookies.access_Token } }
       )
-      console.log("Like updated: ", response.data.post);
       toast.success(response.data.message)
     } catch (err) {
       console.log(err);
@@ -81,7 +94,6 @@ function Feed() {
     const updatedPosts = PostsData?.map((post) => {
       if (post._id === PostId) {
         const CommentMap = { ...post.Comments }
-        console.log("Comment Map Object: ", CommentMap);
         if (CommentMap[commentId]) {
           delete CommentMap[commentId]
         }
@@ -91,9 +103,6 @@ function Feed() {
     })
     setPostsData(updatedPosts)
     try {
-      console.log("post id: ", PostId);
-      console.log("comment id: ", commentId);
-      console.log("user id : ", UserId);
       const response = await axios.patch(`${import.meta.env.VITE_API_URL}/posts/${UserId}/DeleteComment/${PostId}`, {
         CommentId: commentId
       }, { headers: { authorization: cookies.access_Token } })
@@ -106,7 +115,6 @@ function Feed() {
   const toggleRedirect = async (RedirectUserId) => {
     navigate('/redirectProfile', { state: { RedirectId: RedirectUserId } });
   }
-  
   return (
     <div className='whole-feed-div'>
       {
@@ -134,7 +142,7 @@ function Feed() {
                   {
                     post.Owner._id !== UserId && <button onClick={() => RemoveAddFriend(post.Owner._id)}>
                       {
-                        post.Owner.Friends.includes(UserId) ? <img style={{ height: "2.5vh", borderRadius: "5px" }} src={RemoveFriend} alt='Remove'></img> :
+                        post.Owner.Friends?.includes(UserId) ? <img style={{ height: "2.5vh", borderRadius: "5px" }} src={RemoveFriend} alt='Remove'></img> :
                           <img style={{ height: "2.5vh", borderRadius: "5px" }} src={AddFriendPic} alt='Remove'></img>
                       }
                     </button>
@@ -151,7 +159,7 @@ function Feed() {
                 <div style={{ display: "flex" }}>
                   <button onClick={() => RemoveAddLike(post._id)} style={{ display: "flex", alignItems: "center" }}>
                     {
-                      !post.Likes[UserId] ? <>
+                      post?.Likes && !post.Likes[UserId] ? <>
                         <div>
                           <img style={{ height: "2vh" }} src={PostLike} />
                         </div>
@@ -184,7 +192,7 @@ function Feed() {
                     <b>Comments</b>
                   </div>
                   <Separator className="my-4" />
-                  {Object.entries(post.Comments).length === 0 ? (
+                  {post.Comments && Object.entries(post.Comments).length === 0 ? (
                     <p>No comments yet.</p>
                   ) : (
                     <ul>
@@ -205,7 +213,7 @@ function Feed() {
                         ["commentId2", { UserId: "user2", Username: "Doe", CommentText: "Thanks for sharing!", CreatedAt: "2023-09-29T15:05:00" }]
                       ] */}
 
-                      {Object.entries(post.Comments).map(
+                      {post.Comments && Object.entries(post.Comments)?.map(
                         ([commentId, commentData], Index) => (
                           <li key={commentId} className='comment-item'>
                             <div style={{ display: 'flex', alignItems: 'center' }}>

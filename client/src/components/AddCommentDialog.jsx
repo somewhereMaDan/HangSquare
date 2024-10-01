@@ -21,17 +21,20 @@ import { TempContext } from '../Contexts/TempContext'
 
 function AddCommentDialog({ PostId }) {
   const { TempVar, PostsData, setPostsData } = useContext(TempContext)
-  console.log("Value from homepage using useContext: ", TempVar);
   const [Comment, setComment] = useState('')
   const UserId = userGetId();
   const [open, setOpen] = useState(false)  // Manage dialog state
   const [cookies, setCookie] = useCookies(["access_Token"]);
 
-  // console.log("PostsData from AddCommentDialog: ", PostsData);
-
   const AddComment = async () => {
     // we have to use useContext to get the PostsData here so we can use setPostsData(),
     // in order to do that use useContext in homepage then feed and then here---
+
+    if (!PostId) {
+      console.error("Invalid PostId");
+      return;
+    }
+
     const commentId = uuidv4()
     const updatedPosts = PostsData?.map((post) => {
       const newComment = {

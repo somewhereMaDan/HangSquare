@@ -30,24 +30,15 @@ import {
 } from "@/components/ui/avatar"
 import EditProfileDialog from "./EditProfileDialog"
 import { useCookies } from 'react-cookie'
-import { TempContext } from '../Contexts/TempContext'
+import { RedirectContext } from '../Contexts/RedirectContext'
 
-export default function Profile({ RedirectUserId }) {
-  const { TempVar, setTempVar } = useContext(TempContext);
-
+function ReProfile() {
+  
   const navigate = useNavigate();
   const [UserInfo, setUserInfo] = useState([])
   const [UserFriends, setUserFriends] = useState([])
   const [cookies, setCookie] = useCookies(["access_Token"]);
-  let UserId
-
-  const LoggedUserId = userGetId()
-
-  if (!RedirectUserId) {
-    UserId = userGetId()
-  } else {
-    UserId = RedirectUserId
-  }
+  const UserId = userGetId();
 
   const ProfileInfo = async () => {
     try {
@@ -70,17 +61,8 @@ export default function Profile({ RedirectUserId }) {
       console.log(err);
     }
   }
-  
+
   const RemoveFriend = async (FriendId) => {
-    console.log("Friend id to remove: " , FriendId);
-    const updatedFriendInfo = UserFriends.filter((friend) => {
-      return friend._id !== FriendId
-    })
-
-    // const updatedFriendList = {...UserFriends, updatedFriendInfo}
-    setUserFriends(updatedFriendInfo);
-    toast.info("Updating Friend List")
-
     try {
       const response = await axios.patch(`${import.meta.env.VITE_API_URL}/users/${UserId}/addRemove/${FriendId}`,
         { headers: { authorization: cookies.access_Token } }
@@ -126,7 +108,7 @@ export default function Profile({ RedirectUserId }) {
                 </div>
                 <div>
                   {
-                    LoggedUserId === UserId && <EditProfileDialog />
+                    UserId && <EditProfileDialog />
                   }
                 </div>
               </div>
@@ -187,7 +169,7 @@ export default function Profile({ RedirectUserId }) {
                   </div>
                   <div>
                     {
-                      LoggedUserId === UserId && <button onClick={() => RemoveFriend(friend._id)}>
+                      UserId && <button onClick={() => RemoveFriend(friend._id)}>
                         <img style={{ height: "2.5vh", borderRadius: "5px" }} src={RemoveFriendPic}></img>
                       </button>
                     }
@@ -201,3 +183,5 @@ export default function Profile({ RedirectUserId }) {
     </div >
   )
 }
+
+export default ReProfile

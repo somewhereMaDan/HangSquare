@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from 'react'
+import { React, useEffect, useState, useContext } from 'react'
 import './Feed.css'
 import axios from 'axios'
 import './Profile.css'
@@ -18,17 +18,7 @@ import { userGetId } from '@/hooks/userGetId'
 import { toast } from 'sonner'
 import AddCommentDialog from './AddCommentDialog'
 import DeleteCommentPic from '../assets/delete.png'
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { useCookies } from 'react-cookie';
-
 
 function UserFeed({ RedirectUserId }) {
   // let UserId;
@@ -38,9 +28,8 @@ function UserFeed({ RedirectUserId }) {
   const UserId = RedirectUserId
   // }
   const [PostsData, setPostsData] = useState([])
+  // console.log("Post data from own feed: ", PostsData);
   const [cookies, setCookie] = useCookies(["access_Token"]);
-
-  console.log("post data: ", PostsData);
 
   const Posts = async () => {
     try {
@@ -58,7 +47,6 @@ function UserFeed({ RedirectUserId }) {
       const response = await axios.patch(`${import.meta.env.VITE_API_URL}/posts/${UserId}/UpdateLike/${PostId}`,
         { headers: { authorization: cookies.access_Token } }
       )
-      console.log("Like updated: ", response.data.post);
       toast.success(response.data.message)
     } catch (err) {
       console.log(err);
@@ -67,9 +55,6 @@ function UserFeed({ RedirectUserId }) {
 
   const DeleteComment = async (PostId, commentId) => {
     try {
-      console.log("post id: ", PostId);
-      console.log("comment id: ", commentId);
-      console.log("user id : ", UserId);
       const response = await axios.patch(`${import.meta.env.VITE_API_URL}/posts/${UserId}/DeleteComment/${PostId}`, {
         CommentId: commentId
       }, { headers: { authorization: cookies.access_Token } })
@@ -80,9 +65,10 @@ function UserFeed({ RedirectUserId }) {
   }
 
   const DeletePost = async (PostId) => {
+    console.log("Delte?");
     try {
       const response = await axios.patch(`${import.meta.env.VITE_API_URL}/posts/deletePost/${PostId}`, {
-        UserId: UserId
+        UserId: LoggedUserId
       }, { headers: { authorization: cookies.access_Token } })
       toast.success(response.data.message)
     } catch (err) {
@@ -96,48 +82,32 @@ function UserFeed({ RedirectUserId }) {
   return (
     <div className='whole-feed-div'>
       {
-        PostsData.length !== 0 ?
-          PostsData?.map((post, index) => {
-            const LoggedUserId = userGetId()
-            console.log(LoggedUserId);
-            console.log("post owner", post.Owner._id);
-            return (
-              <div key={post._id} className='post-div' style={{ display: "flex", flexDirection: "column" }}>
-                <div className='profile-first-line'>
-                  <div className='avatar-username'>
-                    <div className='avatar'>
-                      <Avatar>
-                        <AvatarImage src={post.Owner.PicturePath} alt="@shadcn" />
-                        <AvatarFallback>CN</AvatarFallback>
-                      </Avatar>
-                    </div>
-                    <div className='user-name-friends'>
-                      <div className='username'>{post.Owner.firstName}</div>
-                      <p className="text-sm text-muted-foreground">
-                        {post.Owner.Location}
-                      </p>
-                    </div>
+        PostsData && PostsData?.map((post, index) => {
+          const LoggedUserId = userGetId()
+          return (
+            <div key={post._id} className='post-div' style={{ display: "flex", flexDirection: "column" }}>
+              <div className='profile-first-line'>
+                <div className='avatar-username'>
+                  <div className='avatar'>
+                    <Avatar>
+                      <AvatarImage src={post.Owner.PicturePath} alt="@shadcn" />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
                   </div>
-                  {
-                    LoggedUserId === post.Owner._id &&
-                    <div>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger>
-                          <div>
-                            <img style={{ height: '3vh' }} src={OptionsImg}></img>
-                          </div>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                          <DropdownMenuLabel>Options</DropdownMenuLabel>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem>
-                            <button onClick={() => DeletePost(post._id)}>Delete</button>
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  }
-                  {/* <div>
+                  <div className='user-name-friends'>
+                    <div className='username'>{post.Owner.firstName}</div>
+                    <p className="text-sm text-muted-foreground">
+                      {post.Owner.Location}
+                    </p>
+                  </div>
+                </div>
+                {
+                  LoggedUserId === post.Owner._id &&
+                  <div>
+                    <button onClick={() => DeletePost(post._id)}>Delete</button>
+                  </div>
+                }
+                {/* <div>
                   {
                     post.Owner._id !== UserId && <button onClick={() => RemoveAddFriend(post.Owner._id)}>
                       {
@@ -147,100 +117,100 @@ function UserFeed({ RedirectUserId }) {
                     </button>
                   }
                 </div> */}
-                </div>
-                <div className='Whole-Post-Section'>
-                  <div className='Post-Description' style={{ marginTop: "3%" }}>{post.Description}</div>
-                  <div className='Post-Img-Section' style={{ display: "flex", justifyContent: "center", marginTop: "1%", marginBottom: "2%" }}>
-                    <div>
-                      <img src={post.PicturePath}></img>
-                    </div>
+              </div>
+              <div className='Whole-Post-Section'>
+                <div className='Post-Description' style={{ marginTop: "3%" }}>{post.Description}</div>
+                <div className='Post-Img-Section' style={{ display: "flex", justifyContent: "center", marginTop: "1%", marginBottom: "2%" }}>
+                  <div>
+                    <img src={post.PicturePath}></img>
                   </div>
-                  <div style={{ display: "flex" }}>
-                    <button onClick={() => RemoveAddLike(post._id)} style={{ display: "flex", alignItems: "center" }}>
-                      {
-                        !post.Likes[UserId] ? <>
+                </div>
+                <div style={{ display: "flex" }}>
+                  <button onClick={() => RemoveAddLike(post._id)} style={{ display: "flex", alignItems: "center" }}>
+                    {
+                      !post.Likes[UserId] ? <>
+                        <div>
+                          <img style={{ height: "2vh" }} src={PostLike} />
+                        </div>
+                        <div style={{ marginLeft: "0.5vw" }}>
+                          Like
+                        </div>
+                      </> :
+                        <>
                           <div>
-                            <img style={{ height: "2vh" }} src={PostLike} />
+                            <img style={{ height: "2vh" }} src={PostLiked} />
                           </div>
                           <div style={{ marginLeft: "0.5vw" }}>
                             Like
                           </div>
-                        </> :
-                          <>
-                            <div>
-                              <img style={{ height: "2vh" }} src={PostLiked} />
-                            </div>
-                            <div style={{ marginLeft: "0.5vw" }}>
-                              Like
-                            </div>
-                          </>
-                      }
-                    </button>
-                    <button style={{ display: "flex", alignItems: "center", paddingLeft: "2%" }}>
-                      <div>
-                        <img style={{ height: "2vh" }} src={PostComment} />
-                      </div>
-                      <div style={{ marginLeft: "0.5vw" }}>
-                        <AddCommentDialog PostId={post._id}>Comment</AddCommentDialog>
-                      </div>
-                    </button>
-
-                  </div>
-                  <div className='comments-section'>
-                    <div style={{ marginTop: "3%" }}>
-                      <b>Comments</b>
+                        </>
+                    }
+                  </button>
+                  <button style={{ display: "flex", alignItems: "center", paddingLeft: "2%" }}>
+                    <div>
+                      <img style={{ height: "2vh" }} src={PostComment} />
                     </div>
-                    <Separator className="my-4" />
-                    {Object.entries(post.Comments).length === 0 ? (
-                      <p>No comments yet.</p>
-                    ) : (
-                      <ul>
-                        {Object.entries(post.Comments).map(
-                          ([commentId, commentData], Index) => (
-                            <li key={commentId} className='comment-item'>
-                              <div style={{ display: 'flex', alignItems: 'center' }}>
-                                <div>
-                                  {
-                                    commentData.UserId === LoggedUserId ? <button onClick={() => DeleteComment(post._id, commentId)}>
-                                      <img style={{ height: '3vh' }} src={DeleteCommentPic}></img>
-                                    </button> : ""
-                                  }
+                    <div style={{ marginLeft: "0.5vw" }}>
+                      <AddCommentDialog PostId={post._id}>Comment</AddCommentDialog>
+                    </div>
+                  </button>
 
+                </div>
+                <div className='comments-section'>
+                  <div style={{ marginTop: "3%" }}>
+                    <b>Comments</b>
+                  </div>
+                  <Separator className="my-4" />
+                  {Object.entries(post.Comments).length === 0 ? (
+                    <p>No comments yet.</p>
+                  ) : (
+                    <ul>
+                      {post.Comments && Object.entries(post.Comments).map(
+                        ([commentId, commentData], Index) => (
+                          <li key={commentId} className='comment-item'>
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                              <div>
+                                {
+                                  commentData.UserId === LoggedUserId ? <button onClick={() => DeleteComment(post._id, commentId)}>
+                                    <img style={{ height: '3vh' }} src={DeleteCommentPic}></img>
+                                  </button> : ""
+                                }
+
+                              </div>
+                              <div style={{ display: 'flex', flexDirection: 'column', width: "100%", marginLeft: '2%' }} className='comment-details'>
+                                <div>
+                                  <p className="text-sm text-muted-foreground">
+                                    {commentData.Username}
+                                  </p>
                                 </div>
-                                <div style={{ display: 'flex', flexDirection: 'column', width: "100%", marginLeft: '2%' }} className='comment-details'>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                  {/* <div> */}
+                                  <div>
+                                    {commentData.CommentText}
+                                  </div>
                                   <div>
                                     <p className="text-sm text-muted-foreground">
-                                      {commentData.Username}
+                                      {/* <strong>On:</strong>{' '} */}
+                                      {new Date(commentData.CreatedAt).toLocaleString()}
                                     </p>
-                                  </div>
-                                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                    {/* <div> */}
-                                    <div>
-                                      {commentData.CommentText}
-                                    </div>
-                                    <div>
-                                      <p className="text-sm text-muted-foreground">
-                                        {/* <strong>On:</strong>{' '} */}
-                                        {new Date(commentData.CreatedAt).toLocaleString()}
-                                      </p>
-                                    </div>
                                   </div>
                                 </div>
                               </div>
-                              <Separator className="my-2" />
-                            </li>
-                          )
-                        )}
-                      </ul>
-                    )}
-                  </div>
+                            </div>
+                            <Separator className="my-2" />
+                          </li>
+                        )
+                      )}
+                    </ul>
+                  )}
                 </div>
               </div>
-            )
-          })
-          : <div className='post-div' style={{ display: "flex", flexDirection: "column" }}>
-            No posts yet
-          </div>
+            </div>
+          )
+        })
+      //     : <div className='post-div' style={{ display: "flex", flexDirection: "column" }}>
+      //   No posts yet
+      // </div>
       }
     </div >
   )
