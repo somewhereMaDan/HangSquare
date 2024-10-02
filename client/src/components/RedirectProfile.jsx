@@ -54,11 +54,9 @@ function RedirectProfile() {
       <div className='HomePage'>
         <div className='UserProfile'>
           <Profile RedirectUserId={RedirectUserId}></Profile>
-          {/* <ReProfile /> */}
         </div>
         <div className='Feed-Section'>
           <div>
-            {/* <UserFeed RedirectUserId={RedirectUserId}></UserFeed> */}
             <Feed></Feed>
           </div>
         </div>

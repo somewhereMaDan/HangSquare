@@ -100,15 +100,11 @@ function Login() {
         <div className="form-container sign-up-container">
           <form onSubmit={OnRegister}>
             <h2 className="Login-Title">Create Account</h2>
-            <input type="text" placeholder="First Name" required value={FirstName} onChange={(e) => setFirstName(e.target.value)} />
-            <input type="text" placeholder="Last Name" required value={LastName} onChange={(e) => setLastName(e.target.value)} />
-            {/* <input type="text" placeholder="PicturePath" onChange={(e) => setProfilePicture(e.target.files[0])} /> */}
-            <Input onChange={(e) => setProfilePicture(e.target.files[0])} id="picture" type="file" />
-            {/* <input type="text" placeholder="Occupation" value={Occupation} onChange={(e) => setOccupation(e.target.value)} />
-            <input type="text" placeholder="Bio" value={Bio} onChange={(e) => setBio(e.target.value)} />
-            <input type="text" placeholder="Location" value={Location} onChange={(e) => setLocation(e.target.value)} /> */}
-            <input type="email" placeholder="Email" required value={Email} onChange={(e) => setEmail(e.target.value)} />
-            <input type="password" placeholder="Password" required value={Password} onChange={(e) => setPassword(e.target.value)} />
+            <input type="text" placeholder="First Name" value={FirstName} onChange={(e) => setFirstName(e.target.value)} required />
+            <input type="text" placeholder="Last Name" value={LastName} onChange={(e) => setLastName(e.target.value)} required />
+            <Input onChange={(e) => setProfilePicture(e.target.files[0])} id="picture" type="file" required />
+            <input type="email" placeholder="Email" value={Email} onChange={(e) => setEmail(e.target.value)} required />
+            <input type="password" placeholder="Password" value={Password} onChange={(e) => setPassword(e.target.value)} required />
             <button className="Login-Page-btn" type="submit">Register</button>
             <button style={{ position: "absolute", bottom: "7px", width: "60%" }} type="button" className="ghost" onClick={handleSignInClick}>Go Back</button>
           </form>
