@@ -36,29 +36,37 @@ function AddCommentDialog({ PostId }) {
     }
 
     const commentId = uuidv4()
-    const updatedPosts = PostsData?.map((post) => {
-      const newComment = {
-        id: commentId, // Use UUID as the key
-        UserId,
-        Username: post.Owner.firstName + " " + post.Owner.lastName,
-        CommentText: Comment,
-        CreatedAt: new Date() // Current date
-      }
-      if (post) {
-        if (post._id === PostId) {
-          const updatedComment = { ...post.Comments, [commentId]: newComment };
-          return { ...post, Comments: updatedComment }
-        }
-      }
-      return post
-    })
+    // const updatedPosts = PostsData?.map((post) => {
+    //   const newComment = {
+    //     id: commentId, // Use UUID as the key
+    //     UserId,
+    //     Username: post.Owner.firstName + " " + post.Owner.lastName,
+    //     CommentText: Comment,
+    //     CreatedAt: new Date() // Current date
+    //   }
+    //   if (post) {
+    //     if (post._id === PostId) {
+    //       const updatedComment = { ...post.Comments, [commentId]: newComment };
+    //       return { ...post, Comments: updatedComment }
+    //     }
+    //   }
+    //   return post
+    // })
 
-    setPostsData(updatedPosts)
+    // setPostsData(updatedPosts)
     try {
       const response = await axios.patch(`${import.meta.env.VITE_API_URL}/posts/${UserId}/AddComment/${PostId}`, {
         comment: Comment,
         CommentId: commentId
       }, { headers: { authorization: cookies.access_Token } })
+      const updatedPost = response.data.post;
+      console.log("postData from AddCommentDialog: ", PostsData);
+      console.log("updatedPost: ", updatedPost);
+      const updatedPosts = PostsData.map((post) => {
+        return post._id === PostId ? updatedPost : post
+      })
+      setPostsData(updatedPosts)
+      console.log("updatedPosts after adding comment: ", updatedPosts);
       setOpen(false)
       toast.success(response.data.message)
     } catch (err) {

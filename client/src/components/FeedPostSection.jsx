@@ -43,20 +43,20 @@ function FeedPostSection() {
     const downloadURL = await getDownloadURL(snapshot.ref);
     // console.log("Image URL:", downloadURL);
 
-    const updatedPosts = [
-      ...PostsData, {
-        Title : "",
-        Owner: UserId,
-        Description: Description,
-        PicturePath: downloadURL,
-        UserPicturePath: UserInfo[0].PicturePath,
-        Likes : [],
-        Comments : {},
-        Location : ""
-      }
-    ]
+    // const updatedPosts = [
+    //   ...PostsData, {
+    //     Title: "",
+    //     Owner: UserId,
+    //     Description: Description,
+    //     PicturePath: downloadURL,
+    //     UserPicturePath: UserInfo[0].PicturePath,
+    //     Likes: [],
+    //     Comments: {},
+    //     Location: ""
+    //   }
+    // ]
 
-    setPostsData(updatedPosts)
+    // setPostsData(updatedPosts)
 
     try {
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/posts/createPost/${UserId}`, {
@@ -64,6 +64,15 @@ function FeedPostSection() {
         PicturePath: downloadURL
       }, { headers: { authorization: cookies.access_Token } })
       toast.success(response.data.message)
+      const newPost = response.data.post
+      console.log("newPost: ", newPost);
+
+      // const updatedPosts = PostsData.map((post) => {
+      //   return 
+      // })
+      const tempPostsData = [...PostsData, newPost]
+      setPostsData(tempPostsData)
+      // console.log(response.data.user_posts);
     } catch (err) {
       console.log(err);
     }
@@ -80,7 +89,7 @@ function FeedPostSection() {
         UserInfo.map((user) => {
           return (
             <div key={user._id} style={{ display: "flex", alignItems: 'center', justifyContent: 'space-between' }} className='avatar'>
-              <div>
+              <div style={{marginRight: "2%"}}>
                 <Avatar>
                   <AvatarImage src={user.PicturePath} alt="@shadcn" />
                   <AvatarFallback>CN</AvatarFallback>
@@ -89,10 +98,10 @@ function FeedPostSection() {
               <div style={{ width: "40%" }}>
                 <Input onChange={(e) => setDescription(e.target.value)} value={Description} type="text" placeholder="What's on your Mind" />
               </div>
-              <div className="grid max-w-sm items-center gap-1.5">
+              <div style={{marginLeft : "2%"}} className="grid max-w-sm items-center gap-1.5">
                 <Input onChange={(e) => setProfilePicture(e.target.files[0])} id="picture" type="file" />
               </div>
-              <div>
+              <div style={{marginLeft : "2%"}}>
                 <Button onClick={() => CreateNewPost(user._id)} type="submit">Post</Button>
               </div>
             </div>

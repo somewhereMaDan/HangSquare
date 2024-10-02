@@ -23,39 +23,52 @@ import { TempContext } from '../Contexts/TempContext'
 import { v4 as uuidv4 } from 'uuid';
 
 function Feed() {
-  const UserId = userGetId();
-  const { PostsData, setPostsData } = useContext(TempContext)
+  let UserId = userGetId();
+  let LoggedUserId = userGetId()
+
+  const { PostsData, setPostsData, UserInfo, setUserInfo, UserFriends, setUserFriends, UserFriendsId, setUserFriendsId, redirectUserId, setRedirectUserId } = useContext(TempContext)
   // const [PostsData, setPostsData] = useState([])
   const navigate = useNavigate()
   const [cookies, setCookie] = useCookies(["access_Token"]);
 
+  if (redirectUserId !== null) {
+    UserId = redirectUserId
+    LoggedUserId = redirectUserId
+  }
   console.log("post data: ", PostsData);
 
-  const RemoveAddFriend = async (FriendId) => {
-    const updatedPostsData = PostsData.map((post) => {
-      if (post.Owner._id === FriendId) {
-        // Toggle friendship status for both the current user and the post owner
-        const updatedOwnerFriends = post.Owner.Friends.includes(UserId)
-          ? post.Owner.Friends.filter((id) => id !== UserId)  // Remove current user from post owner's friends list
-          : [...post.Owner.Friends, UserId]; // Add current user to post owner's friends list
-
-        return {
-          ...post,
-          Owner: {
-            ...post.Owner,
-            Friends: updatedOwnerFriends,
-          },
-        };
+  const RemoveAddFriend = async (PostOwnerId, Owner) => {
+    let updatedFriendList;
+    let updatedUserFriends;
+    if (UserFriendsId.includes(PostOwnerId)) {
+      // Remove the friend
+      updatedFriendList = UserFriendsId.filter(friendsId => friendsId !== PostOwnerId);
+      updatedUserFriends = UserFriends.filter(friend => friend._id !== PostOwnerId);
+    } else {
+      // Add the friend
+      if (!UserFriends.some(friend => friend._id === Owner._id)) {
+        updatedUserFriends = [...UserFriends, Owner];
+      } else {
+        updatedUserFriends = UserFriends; // No change needed if already present
       }
-      return post;
-    });
+      updatedFriendList = [...UserFriendsId, PostOwnerId];
+      // updatedUserFriends = [...UserFriends, Owner]
+      // updatedFriendList = [...UserFriendsId, PostOwnerId];
+    }
 
-    setPostsData(updatedPostsData); // Update the state optimistically
+    setUserFriendsId(updatedFriendList)
+    setUserFriends(updatedUserFriends)
+
     try {
-      const response = await axios.patch(`${import.meta.env.VITE_API_URL}/users/${UserId}/addRemove/${FriendId}`,
+      const response = await axios.patch(`${import.meta.env.VITE_API_URL}/users/${UserId}/addRemove/${PostOwnerId}`,
         { headers: { authorization: cookies.access_Token } }
       )
       toast.success(response.data.message)
+      // const updatedUser = response.data.SingleUser
+      // const updatedUsers = UserInfo.filter((user) => {
+      //   return user._id !== PostOwnerId ? updatedUser : user
+      // })
+      // setUserInfo(updatedUsers)
     } catch (err) {
       console.log(err);
     }
@@ -66,18 +79,19 @@ function Feed() {
       console.error("PostId is undefined or invalid");
       return;
     }
-    const updatedPosts = PostsData.map((post) => {
-      if (post) {
-        if (post._id === PostId) {
-          if (post.Likes) {
-            const UpdatedLikes = { ...post.Likes, [UserId]: !post?.Likes[UserId] }
-            return { ...post, Likes: UpdatedLikes }
-          }
-        }
-      }
-      return post
-    })
-    setPostsData(updatedPosts)
+    // const updatedPosts = PostsData.map((post) => {
+    //   if (post) {
+    //     if (post._id === PostId) {
+    //       if (post.Likes) {
+    //         const UpdatedLikes = { ...post.Likes, [UserId]: !post?.Likes[UserId] }
+    //         return { ...post, Likes: UpdatedLikes }
+    //       }
+    //     }
+    //   }
+    //   return post
+    // })
+    // setPostsData(updatedPosts)
+
     // this above approch maintains Immutability and avoid Direct Mutation - Preferable when using state management libraries that require state to be immutable, as it helps prevent unintended side effects and makes debugging easier.
 
     try {
@@ -85,40 +99,72 @@ function Feed() {
         { headers: { authorization: cookies.access_Token } }
       )
       toast.success(response.data.message)
+      const updatedPost = response.data.post;
+
+      const updatedPosts = PostsData.map((post) => {
+        return post._id === PostId ? updatedPost : post
+      })
+      setPostsData(updatedPosts)
     } catch (err) {
       console.log(err);
     }
   }
 
   const DeleteComment = async (PostId, commentId) => {
-    const updatedPosts = PostsData?.map((post) => {
-      if (post._id === PostId) {
-        const CommentMap = { ...post.Comments }
-        if (CommentMap[commentId]) {
-          delete CommentMap[commentId]
-        }
-        return { ...post, Comments: CommentMap }
-      }
-      return post
-    })
-    setPostsData(updatedPosts)
+    // const updatedPosts = PostsData?.map((post) => {
+    //   if (post._id === PostId) {
+    //     const CommentMap = { ...post.Comments }
+    //     if (CommentMap[commentId]) {
+    //       delete CommentMap[commentId]
+    //     }
+    //     return { ...post, Comments: CommentMap }
+    //   }
+    //   return post
+    // })
+    // setPostsData(updatedPosts)
+    console.log("PostsData after update: ", PostsData);
     try {
       const response = await axios.patch(`${import.meta.env.VITE_API_URL}/posts/${UserId}/DeleteComment/${PostId}`, {
         CommentId: commentId
       }, { headers: { authorization: cookies.access_Token } })
       toast.success(response.data.message)
+      const updatedPost = response.data.Post
+      const updatedPosts = PostsData.map((post) => {
+        return post._id === PostId ? updatedPost : post
+      })
+      setPostsData(updatedPosts)
     } catch (err) {
       console.log(err);
     }
   }
 
-  const toggleRedirect = async (RedirectUserId) => {
-    navigate('/redirectProfile', { state: { RedirectId: RedirectUserId } });
+  const DeletePost = async (PostId) => {
+    console.log("Delte?");
+    try {
+      const response = await axios.patch(`${import.meta.env.VITE_API_URL}/posts/deletePost/${PostId}`, {
+        UserId: LoggedUserId
+      }, { headers: { authorization: cookies.access_Token } })
+      toast.success(response.data.message)
+      // const updatedPost = response.data.post
+      const updatedPosts = PostsData.filter((post) => {
+        return post._id !== PostId
+      })
+      console.log("updatedPosts: ", updatedPosts);
+      setPostsData(updatedPosts)
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  const toggleRedirect = async (ToRedirectUserId) => {
+    navigate('/redirectProfile', { state: { RedirectId: ToRedirectUserId } });
+    setRedirectUserId(ToRedirectUserId)
+
   }
   return (
     <div className='whole-feed-div'>
       {
-        PostsData?.map((post, index) => {
+        PostsData && PostsData?.map((post, index) => {
           return (
             <div key={post._id} className='post-div' style={{ display: "flex", flexDirection: "column" }}>
               <div className='profile-first-line'>
@@ -140,10 +186,21 @@ function Feed() {
                 </div>
                 <div>
                   {
-                    post.Owner._id !== UserId && <button onClick={() => RemoveAddFriend(post.Owner._id)}>
+                    LoggedUserId === post.Owner._id &&
+                    <div>
+                      <button onClick={() => DeletePost(post._id)}>Delete</button>
+                    </div>
+                  }
+                  {/* {console.log("User Friends: " + UserFriendsId + " post owner is: " + post.Owner._id)} */}
+                  {
+                    post.Owner._id !== UserId && <button onClick={() => RemoveAddFriend(post.Owner._id, post.Owner)}>
+                      {/* {
+                      post.Owner.Friends.includes(LoggedUserId) ? <img style={{ height: "2.5vh", borderRadius: "5px" }} src={RemoveFriend} alt='Remove' /> :
+                        post.Owner._id !== UserId && <img style={{ height: "2.5vh", borderRadius: "5px" }} src={AddFriendPic} alt='Remove'></img>
+                    } */}
                       {
-                        post.Owner.Friends?.includes(UserId) ? <img style={{ height: "2.5vh", borderRadius: "5px" }} src={RemoveFriend} alt='Remove'></img> :
-                          <img style={{ height: "2.5vh", borderRadius: "5px" }} src={AddFriendPic} alt='Remove'></img>
+                        UserFriendsId.includes(post.Owner._id) ? <img style={{ height: "2.5vh", borderRadius: "5px" }} src={RemoveFriend} alt='Remove' />
+                          : <img style={{ height: "2.5vh", borderRadius: "5px" }} src={AddFriendPic} alt='Remove'></img>
                       }
                     </button>
                   }

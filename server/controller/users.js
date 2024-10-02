@@ -50,7 +50,7 @@ export const addRemoveFriend = async (req, res) => {
     await user.save();
     await FriendUser.save()
 
-    return res.status(200).json({ message: "Friend List Updated", userFriendList: user.Friends, FriendListOfFriend: FriendUser.Friends })
+    return res.status(200).json({ message: "Friend List Updated", SingleUser: user })
   } catch (err) {
     return res.status(404).json({ error: err.message })
   }

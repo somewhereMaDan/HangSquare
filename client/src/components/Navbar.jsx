@@ -1,12 +1,14 @@
 
-import { useState, React } from 'react';
+import { useState, React, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import { RiArrowRightUpLine, RiCloseLargeLine, RiMenuLine } from 'react-icons/ri';
+import { TempContext } from '../Contexts/TempContext'
 
 export const Navbar = () => {
+  const { setRedirectUserId } = useContext(TempContext)
   const [cookies, setCokkies] = useCookies(["access_Token"]);
   const navigate = useNavigate();
 
@@ -24,6 +26,7 @@ export const Navbar = () => {
 
   const closeMenu = () => {
     setIsMenuOpen(false);
+    setRedirectUserId(null)
   };
 
   return (

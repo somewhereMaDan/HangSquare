@@ -1,6 +1,6 @@
 import { React, useState, useEffect, createContext } from 'react'
 import Advertisment from './Advertisment'
-// import Profile from './Profile'
+import Profile from './Profile'
 import UserFeed from './OwnFeed'
 import { useLocation } from 'react-router-dom';
 import { RedirectContext } from '../Contexts/RedirectContext'
@@ -8,6 +8,7 @@ import { userGetId } from '@/hooks/userGetId';
 import { useCookies } from 'react-cookie'
 import axios from 'axios';
 import ReProfile from './ReProfile';
+import Feed from './Feed';
 
 export const GlobalContext = createContext();
 function RedirectProfile() {
@@ -57,7 +58,8 @@ function RedirectProfile() {
         </div>
         <div className='Feed-Section'>
           <div>
-            <UserFeed RedirectUserId={RedirectUserId}></UserFeed>
+            {/* <UserFeed RedirectUserId={RedirectUserId}></UserFeed> */}
+            <Feed></Feed>
           </div>
         </div>
         <div className='Advertisment'>

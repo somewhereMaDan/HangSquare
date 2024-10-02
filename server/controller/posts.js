@@ -47,7 +47,8 @@ export const CreatePost = async (req, res) => {
     user.OwnPosts.push(newPost._id)
     await user.save()
 
-    return res.status(200).json({ message: "post created", post: newPost, user_posts: user.OwnPosts })
+    const PopulatedPost = await PostModel.findById(newPost._id).populate('Owner')
+    return res.status(200).json({ message: "post created", post: PopulatedPost, user_posts: user.OwnPosts })
   } catch (err) {
     return res.status(404).json({ error: err.message })
   }
@@ -58,16 +59,13 @@ export const DeletePost = async (req, res) => {
     const { UserId } = req.body
     const { PostId } = req.params
 
-    const post = await PostModel.findById(PostId)
-
-    console.log("post owner from Delete post: ", post.Owner);
-    console.log("User Id from Delete post: ", UserId);
+    const post = await PostModel.findById(PostId).populate('Owner')
 
     if (!post) {
       return res.status(403).json({ error: "Post not found" })
     }
 
-    if (post.Owner !== UserId) {
+    if (post.Owner._id.toString() !== UserId) {
       return res.status(403).json({ message: "You're not authorized to delete this post" })
     }
 
@@ -83,7 +81,7 @@ export const DeletePost = async (req, res) => {
       return res.status(403).json({ message: "User not found for this post" })
     }
 
-    return res.status(200).json({ message: "Post deleted Successfully" })
+    return res.status(200).json({ message: "Post deleted Successfully", post: post })
   } catch (err) {
     res.status(404).json({ error: err.message })
   }
@@ -93,7 +91,7 @@ export const AddRemoveLikes = async (req, res) => {
   try {
     const { UserId, PostId } = req.params
 
-    const post = await PostModel.findById(PostId)
+    const post = await PostModel.findById(PostId).populate('Owner')
 
     if (!post) {
       return res.status(404).json({ message: "Post not found" })
@@ -118,7 +116,7 @@ export const AddComment = async (req, res) => {
   const { UserId, PostId } = req.params
 
   const user = await UserModel.findById(UserId)
-  const post = await PostModel.findById(PostId)
+  const post = await PostModel.findById(PostId).populate('Owner')
 
   if (!post) {
     return res.status(404).json({ message: "Post not found" })
@@ -146,7 +144,7 @@ export const DeleteComment = async (req, res) => {
     const { CommentId } = req.body
 
     console.log(CommentId);
-    const post = await PostModel.findById(PostId)
+    const post = await PostModel.findById(PostId).populate('Owner')
 
     if (!post) {
       return res.status(404).json({ error: "Post not found" })

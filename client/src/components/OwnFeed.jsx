@@ -21,14 +21,9 @@ import DeleteCommentPic from '../assets/delete.png'
 import { useCookies } from 'react-cookie';
 
 function UserFeed({ RedirectUserId }) {
-  // let UserId;
-  // if (!RedirectUserId) {
   const LoggedUserId = userGetId();
-  // } else {
   const UserId = RedirectUserId
-  // }
   const [PostsData, setPostsData] = useState([])
-  // console.log("Post data from own feed: ", PostsData);
   const [cookies, setCookie] = useCookies(["access_Token"]);
 
   const Posts = async () => {
