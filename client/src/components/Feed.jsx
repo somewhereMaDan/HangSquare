@@ -214,7 +214,10 @@ function Feed() {
                   </div>
                 </div>
                 <div style={{ display: "flex" }}>
-                  <button onClick={() => RemoveAddLike(post._id)} style={{ display: "flex", alignItems: "center" }}>
+                  {
+                    Object.keys(post.Likes).length !== 0 ? <div>{Object.keys(post.Likes).length}</div> : ""
+                  }
+                  <button onClick={() => RemoveAddLike(post._id)} style={{ display: "flex", alignItems: "center", paddingLeft: "1%" }}>
                     {
                       post?.Likes && !post.Likes[UserId] ? <>
                         <div>
