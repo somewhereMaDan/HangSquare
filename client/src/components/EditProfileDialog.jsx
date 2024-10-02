@@ -1,4 +1,4 @@
-import { useState, useEffect, React } from 'react'
+import { useState, useEffect, React, useContext } from 'react'
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -15,6 +15,7 @@ import axios from 'axios'
 import { userGetId } from '@/hooks/userGetId'
 import { toast } from 'sonner'
 import { useCookies } from 'react-cookie';
+import { TempContext } from '../Contexts/TempContext'
 
 function EditProfileDialog() {
   const UserId = userGetId()
@@ -24,9 +25,10 @@ function EditProfileDialog() {
   const [Insta, setInsta] = useState('')
   const [open, setOpen] = useState(false)  // Manage dialog state
   const [cookies, setCookie] = useCookies(["access_Token"]);
+  const { UserInfo, setUserInfo } = useContext(TempContext)
 
   const EditProfile = async () => {
-    
+
     try {
       const response = await axios.patch(`${import.meta.env.VITE_API_URL}/users/${UserId}/CompleteProfile`, {
         Location: Location,
@@ -35,10 +37,19 @@ function EditProfileDialog() {
         Linkdin: Linkdin
       }, { headers: { authorization: cookies.access_Token } })
       setOpen(false)
+      const updatedUserInfo = response.data.user
+      // const tempData = UserInfo.filter((user) => {
+      //   return user._id === UserId ? updatedUserInfo : user
+      // })
+      setUserInfo([updatedUserInfo])
       toast.success(response.data.message)
     } catch (err) {
       console.log(err);
     }
+    setOccupation("")
+    setLocation("")
+    setLinkdin("")
+    setInsta("")
   }
   return (
     <div>

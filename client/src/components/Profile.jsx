@@ -49,7 +49,7 @@ export default function Profile() {
     UserId = redirectUserId
   }
 
-  
+
 
   // useEffect(() => {
   //   // Update the UserId based on whether redirectUserId is available
@@ -128,6 +128,8 @@ export default function Profile() {
   //   setToggleValue(!ToggleValue);
   // };
 
+
+  console.log("UserInfo: ", UserInfo);
   return (
     <div className='whole-profile-info'>
       {

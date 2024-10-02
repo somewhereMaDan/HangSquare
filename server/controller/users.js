@@ -85,7 +85,8 @@ export const CompleteProfile = async (req, res) => {
 
     return res.status(200).json({
       message: "Profile updated successfully", Occupation: user.Occupation, Location: user.Location,
-      Linkdin: user.SocialProfile.get("Linkdin"), Instagram: user.SocialProfile.get("Instagram")
+      Linkdin: user.SocialProfile.get("Linkdin"), Instagram: user.SocialProfile.get("Instagram"),
+      user : user
     })
   } catch (err) {
     return res.status(500).json({ error: err.message })
