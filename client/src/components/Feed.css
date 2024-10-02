@@ -7,3 +7,26 @@
   padding: 2vh 2vw;
   /* height: 80vh; */
 }
+
+.button-52 {
+  margin: 10px 16px 10px;
+  padding: 5px 8px 5px;
+  width: 7vw;
+  font-size: 16px;
+  font-weight: 200;
+  letter-spacing: 1px;
+  outline: 0;
+  border: 1px solid black;
+  color: black;
+  cursor: pointer;
+  position: relative;
+  background-color: rgba(0, 0, 0, 0);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-52:hover {
+  /* background-color: #FF5B61; */
+  background-color: red;
+}
