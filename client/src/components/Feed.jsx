@@ -164,6 +164,9 @@ function Feed() {
   return (
     <div className='whole-feed-div'>
       {
+        (!PostsData || PostsData.length === 0) ? (
+          <div className='post-div'>No posts yet</div>
+        ) : (
         PostsData && PostsData?.map((post, index) => {
           return (
             <div key={post._id} className='post-div' style={{ display: "flex", flexDirection: "column" }}>
@@ -315,8 +318,8 @@ function Feed() {
               </div>
             </div>
           )
-        })
-      }
+        }) 
+      )}
     </div >
   )
 }
