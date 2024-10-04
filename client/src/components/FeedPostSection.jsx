@@ -74,7 +74,7 @@ function FeedPostSection() {
             <div key={user._id} className='avatar'>
               <div className='avatar-icon'>
                 <Avatar>
-                  <AvatarImage src={user.PicturePath} alt="@shadcn" />
+                  <AvatarImage style={{ objectFit: 'cover' }}  src={user.PicturePath} alt="@shadcn" />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
               </div>

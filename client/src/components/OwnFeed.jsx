@@ -85,7 +85,7 @@ function UserFeed({ RedirectUserId }) {
                 <div className='avatar-username'>
                   <div className='avatar'>
                     <Avatar>
-                      <AvatarImage src={post.Owner.PicturePath} alt="@shadcn" />
+                      <AvatarImage style={{ objectFit: 'cover' }}  src={post.Owner.PicturePath} alt="@shadcn" />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                   </div>

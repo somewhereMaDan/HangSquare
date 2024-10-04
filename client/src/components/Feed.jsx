@@ -168,100 +168,100 @@ function Feed() {
         (!PostsData || PostsData.length === 0) ? (
           <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}} className='post-div'>No posts yet</div>
         ) : (
-        PostsData && PostsData?.map((post, index) => {
-          return (
-            <div key={post._id} className='post-div' style={{ display: "flex", flexDirection: "column" }}>
-              <div className='profile-first-line'>
-                <div className='avatar-username'>
-                  <div className='avatar'>
-                    <Avatar>
-                      <AvatarImage src={post.Owner.PicturePath} alt="@shadcn" />
-                      <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
-                  </div>
-                  <div className='user-name-friends'>
-                    <button onClick={() => toggleRedirect(post.Owner._id)}>
-                      <div className='username'>{post.Owner.firstName}</div>
-                    </button>
-                    <p className="text-sm text-muted-foreground">
-                      {post.Owner.Location}
-                    </p>
-                  </div>
-                </div>
-                <div>
-                  {
-                    LoggedUserId === post.Owner._id &&
-                    <div>
-                      <button className='delete-btn' onClick={() => DeletePost(post._id)}>Delete</button>
+          PostsData && PostsData?.map((post, index) => {
+            return (
+              <div key={post._id} className='post-div' style={{ display: "flex", flexDirection: "column" }}>
+                <div className='profile-first-line'>
+                  <div className='avatar-username'>
+                    <div className='avatar'>
+                      <Avatar>
+                        <AvatarImage style={{ objectFit: 'cover' }} src={post.Owner.PicturePath} alt="@shadcn" />
+                        <AvatarFallback>CN</AvatarFallback>
+                      </Avatar>
                     </div>
-                  }
-                  {/* {console.log("User Friends: " + UserFriendsId + " post owner is: " + post.Owner._id)} */}
-                  {
-                    post.Owner._id !== UserId && <button onClick={() => RemoveAddFriend(post.Owner._id, post.Owner)}>
-                      {/* {
+                    <div className='user-name-friends'>
+                      <button onClick={() => toggleRedirect(post.Owner._id)}>
+                        <div className='username'>{post.Owner.firstName}</div>
+                      </button>
+                      <p className="text-sm text-muted-foreground">
+                        {post.Owner.Location}
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    {
+                      LoggedUserId === post.Owner._id &&
+                      <div>
+                        <button className='delete-btn' onClick={() => DeletePost(post._id)}>Delete</button>
+                      </div>
+                    }
+                    {/* {console.log("User Friends: " + UserFriendsId + " post owner is: " + post.Owner._id)} */}
+                    {
+                      post.Owner._id !== UserId && <button onClick={() => RemoveAddFriend(post.Owner._id, post.Owner)}>
+                        {/* {
                       post.Owner.Friends.includes(LoggedUserId) ? <img style={{ height: "2.5vh", borderRadius: "5px" }} src={RemoveFriend} alt='Remove' /> :
                         post.Owner._id !== UserId && <img style={{ height: "2.5vh", borderRadius: "5px" }} src={AddFriendPic} alt='Remove'></img>
                     } */}
-                      {
-                        UserFriendsId.includes(post.Owner._id) ? <img style={{ height: "2.5vh", borderRadius: "5px" }} src={RemoveFriend} alt='Remove' />
-                          : <img style={{ height: "2.5vh", borderRadius: "5px" }} src={AddFriendPic} alt='Remove'></img>
-                      }
-                    </button>
-                  }
-                </div>
-              </div>
-              <div className='Whole-Post-Section'>
-                <div className='Post-Description' style={{ marginTop: "3%" }}>{post.Description}</div>
-                <div className='Post-Img-Section' style={{ display: "flex", justifyContent: "center", marginTop: "1%", marginBottom: "2%" }}>
-                  <div>
-                    <img src={post.PicturePath}></img>
+                        {
+                          UserFriendsId.includes(post.Owner._id) ? <img style={{ height: "2.5vh", borderRadius: "5px" }} src={RemoveFriend} alt='Remove' />
+                            : <img style={{ height: "2.5vh", borderRadius: "5px" }} src={AddFriendPic} alt='Remove'></img>
+                        }
+                      </button>
+                    }
                   </div>
                 </div>
-                <div style={{ display: "flex" }}>
-                  {
-                    Object.keys(post.Likes).length !== 0 ? <div>{Object.keys(post.Likes).length}</div> : ""
-                  }
-                  <button onClick={() => RemoveAddLike(post._id)} style={{ display: "flex", alignItems: "center", paddingLeft: "1%" }}>
+                <div className='Whole-Post-Section'>
+                  <div className='Post-Description' style={{ marginTop: "3%" }}>{post.Description}</div>
+                  <div className='Post-Img-Section' style={{ display: "flex", justifyContent: "center", marginTop: "1%", marginBottom: "2%" }}>
+                    <div>
+                      <img src={post.PicturePath}></img>
+                    </div>
+                  </div>
+                  <div style={{ display: "flex" }}>
                     {
-                      post?.Likes && !post.Likes[UserId] ? <>
-                        <div>
-                          <img style={{ height: "2vh" }} src={PostLike} />
-                        </div>
-                        <div style={{ marginLeft: "0.5vw" }}>
-                          Like
-                        </div>
-                      </> :
-                        <>
+                      Object.keys(post.Likes).length !== 0 ? <div>{Object.keys(post.Likes).length}</div> : ""
+                    }
+                    <button onClick={() => RemoveAddLike(post._id)} style={{ display: "flex", alignItems: "center", paddingLeft: "1%" }}>
+                      {
+                        post?.Likes && !post.Likes[UserId] ? <>
                           <div>
-                            <img style={{ height: "2vh" }} src={PostLiked} />
+                            <img style={{ height: "2vh" }} src={PostLike} />
                           </div>
                           <div style={{ marginLeft: "0.5vw" }}>
                             Like
                           </div>
-                        </>
-                    }
-                  </button>
-                  <button style={{ display: "flex", alignItems: "center", paddingLeft: "2%" }}>
-                    <div>
-                      <img style={{ height: "2vh" }} src={PostComment} />
-                    </div>
-                    <div style={{ marginLeft: "0.5vw" }}>
-                      <AddCommentDialog PostId={post._id}>Comment</AddCommentDialog>
-                    </div>
-                  </button>
+                        </> :
+                          <>
+                            <div>
+                              <img style={{ height: "2vh" }} src={PostLiked} />
+                            </div>
+                            <div style={{ marginLeft: "0.5vw" }}>
+                              Like
+                            </div>
+                          </>
+                      }
+                    </button>
+                    <button style={{ display: "flex", alignItems: "center", paddingLeft: "2%" }}>
+                      <div>
+                        <img style={{ height: "2vh" }} src={PostComment} />
+                      </div>
+                      <div style={{ marginLeft: "0.5vw" }}>
+                        <AddCommentDialog PostId={post._id}>Comment</AddCommentDialog>
+                      </div>
+                    </button>
 
-                </div>
-                <div className='comments-section'>
-                  <div style={{ marginTop: "3%" }}>
-                    <b>Comments</b>
                   </div>
-                  <Separator className="my-4" />
-                  {post.Comments && Object.entries(post.Comments).length === 0 ? (
-                    <p>No comments yet.</p>
-                  ) : (
-                    <ul>
-                      {/* Object.entries(): This function converts an object's key-value pairs into an array of arrays, where each inner array consists of [key, value]. In your case, Object.entries(post.Comments) would return something like this: */}
-                      {/* from this -
+                  <div className='comments-section'>
+                    <div style={{ marginTop: "3%" }}>
+                      <b>Comments</b>
+                    </div>
+                    <Separator className="my-4" />
+                    {post.Comments && Object.entries(post.Comments).length === 0 ? (
+                      <p>No comments yet.</p>
+                    ) : (
+                      <ul>
+                        {/* Object.entries(): This function converts an object's key-value pairs into an array of arrays, where each inner array consists of [key, value]. In your case, Object.entries(post.Comments) would return something like this: */}
+                        {/* from this -
 
                       post.Comments = {
                         "commentId1": { UserId: "user1", Username: "John", CommentText: "Great post!", CreatedAt: "2023-09-29T14:21:00" },
@@ -269,7 +269,7 @@ function Feed() {
                       }; */}
 
 
-                      {/* 
+                        {/* 
                       To this -
 
                       [
@@ -277,50 +277,50 @@ function Feed() {
                         ["commentId2", { UserId: "user2", Username: "Doe", CommentText: "Thanks for sharing!", CreatedAt: "2023-09-29T15:05:00" }]
                       ] */}
 
-                      {post.Comments && Object.entries(post.Comments)?.map(
-                        ([commentId, commentData], Index) => (
-                          <li key={commentId} className='comment-item'>
-                            <div style={{ display: 'flex', alignItems: 'center' }}>
-                              <div>
-                                {
-                                  commentData.UserId === UserId ? <button onClick={() => DeleteComment(post._id, commentId)}>
-                                    <img style={{ height: '3vh' }} src={DeleteCommentPic}></img>
-                                  </button> : ""
-                                }
-
-                              </div>
-                              <div style={{ display: 'flex', flexDirection: 'column', width: "100%", marginLeft: '2%' }} className='comment-details'>
+                        {post.Comments && Object.entries(post.Comments)?.map(
+                          ([commentId, commentData], Index) => (
+                            <li key={commentId} className='comment-item'>
+                              <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <div>
-                                  <p className="text-sm text-muted-foreground">
-                                    {commentData.Username}
-                                  </p>
+                                  {
+                                    commentData.UserId === UserId ? <button onClick={() => DeleteComment(post._id, commentId)}>
+                                      <img style={{ height: '3vh' }} src={DeleteCommentPic}></img>
+                                    </button> : ""
+                                  }
+
                                 </div>
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                  {/* <div> */}
-                                  <div>
-                                    {commentData.CommentText}
-                                  </div>
+                                <div style={{ display: 'flex', flexDirection: 'column', width: "100%", marginLeft: '2%' }} className='comment-details'>
                                   <div>
                                     <p className="text-sm text-muted-foreground">
-                                      {/* <strong>On:</strong>{' '} */}
-                                      {new Date(commentData.CreatedAt).toLocaleString()}
+                                      {commentData.Username}
                                     </p>
+                                  </div>
+                                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                    {/* <div> */}
+                                    <div>
+                                      {commentData.CommentText}
+                                    </div>
+                                    <div>
+                                      <p className="text-sm text-muted-foreground">
+                                        {/* <strong>On:</strong>{' '} */}
+                                        {new Date(commentData.CreatedAt).toLocaleString()}
+                                      </p>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                            <Separator className="my-2" />
-                          </li>
-                        )
-                      )}
-                    </ul>
-                  )}
+                              <Separator className="my-2" />
+                            </li>
+                          )
+                        )}
+                      </ul>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          )
-        }) 
-      )}
+            )
+          })
+        )}
     </div >
   )
 }

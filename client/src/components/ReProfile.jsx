@@ -93,7 +93,7 @@ function ReProfile() {
                 <div className='avatar-username'>
                   <div className='avatar'>
                     <Avatar>
-                      <AvatarImage src={user.PicturePath} alt="@shadcn" />
+                      <AvatarImage style={{ objectFit: 'cover' }}  src={user.PicturePath} alt="@shadcn" />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                   </div>
