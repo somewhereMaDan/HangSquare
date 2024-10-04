@@ -283,7 +283,7 @@ function Feed() {
                               <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <div>
                                   {
-                                    commentData.UserId === UserId ? <button onClick={() => DeleteComment(post._id, commentId)}>
+                                    commentData.UserId === LoggedUserId ? <button onClick={() => DeleteComment(post._id, commentId)}>
                                       <img style={{ height: '3vh' }} src={DeleteCommentPic}></img>
                                     </button> : ""
                                   }
