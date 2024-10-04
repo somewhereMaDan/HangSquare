@@ -188,7 +188,7 @@ function Feed() {
                   {
                     LoggedUserId === post.Owner._id &&
                     <div>
-                      <button className='button-52' onClick={() => DeletePost(post._id)}>Delete</button>
+                      <button className='delete-btn' onClick={() => DeletePost(post._id)}>Delete</button>
                     </div>
                   }
                   {/* {console.log("User Friends: " + UserFriendsId + " post owner is: " + post.Owner._id)} */}

@@ -50,7 +50,6 @@ function RedirectProfile() {
 
 
   return (
-    <RedirectContext.Provider value={{ RePostsData, setRePostsData, ReUserInfo, setReUserInfo }}>
       <div className='HomePage'>
         <div className='UserProfile'>
           <Profile RedirectUserId={RedirectUserId}></Profile>
@@ -64,7 +63,6 @@ function RedirectProfile() {
           <Advertisment />
         </div>
       </div>
-    </RedirectContext.Provider>
   )
 }
 

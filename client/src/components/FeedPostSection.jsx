@@ -88,20 +88,20 @@ function FeedPostSection() {
       {
         UserInfo.map((user) => {
           return (
-            <div key={user._id} style={{ display: "flex", alignItems: 'center', justifyContent: 'space-between' }} className='avatar'>
-              <div style={{marginRight: "2%"}}>
+            <div key={user._id} className='avatar'>
+              <div className='avatar-icon'>
                 <Avatar>
                   <AvatarImage src={user.PicturePath} alt="@shadcn" />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
               </div>
-              <div style={{ width: "40%" }}>
+              <div className='post-description'>
                 <Input onChange={(e) => setDescription(e.target.value)} value={Description} type="text" placeholder="What's on your Mind" />
               </div>
-              <div style={{marginLeft : "2%"}} className="grid max-w-sm items-center gap-1.5">
+              <div className='post-pic-path'>
                 <Input onChange={(e) => setProfilePicture(e.target.files[0])} id="picture" type="file" />
               </div>
-              <div style={{marginLeft : "2%"}}>
+              <div className='post-submit-btn'>
                 <Button onClick={() => CreateNewPost(user._id)} type="submit">Post</Button>
               </div>
             </div>

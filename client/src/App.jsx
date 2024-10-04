@@ -114,7 +114,7 @@ function Content() {
     } else {
       Posts()
     }
-  }, [redirectUserId]) // Adding redirectUserId to the dependency array
+  }, [redirectUserId, UserId]) // Adding redirectUserId to the dependency array
 
 
   return (

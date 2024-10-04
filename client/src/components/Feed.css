@@ -8,7 +8,7 @@
   /* height: 80vh; */
 }
 
-.button-52 {
+/* .button-1{
   margin: 10px 16px 10px;
   padding: 5px 8px 5px;
   width: 7vw;
@@ -26,7 +26,6 @@
   touch-action: manipulation;
 }
 
-.button-52:hover {
-  /* background-color: #FF5B61; */
+.responsive-btn:hover {
   background-color: red;
-}
+} */

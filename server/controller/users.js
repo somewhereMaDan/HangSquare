@@ -1,14 +1,20 @@
 import { UserModel } from "../models/Users.js"
-
+import mongoose from "mongoose";
 
 export const GetUserInfo = async (req, res) => {
   const id = req.params.id;
 
   const user = await UserModel.findById(id)
 
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ error: "Invalid user ID format" });
+  }
+
+
   if (!user) {
     return res.status(403).json({ error: "User not found" })
   }
+
   return res.status(200).json({ message: "Got User Info", UserInfo: user, Location: user.Location, Occupation: user.Occupation, SocialProfile: user.SocialProfile })
 }
 

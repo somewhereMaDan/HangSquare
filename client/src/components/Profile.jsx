@@ -49,39 +49,6 @@ export default function Profile() {
     UserId = redirectUserId
   }
 
-
-
-  // useEffect(() => {
-  //   // Update the UserId based on whether redirectUserId is available
-  //   if (redirectUserId) {
-  //     setTempUserId(redirectUserId);
-  //   } else {
-  //     setTempUserId(LoggedUserId); // Use the logged-in user's ID by default
-  //   }
-  // }, [redirectUserId]); // Run whenever redirectUserId or LoggedUserId changes
-  // const ProfileInfo = async () => {
-  //   try {
-  //     const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/${UserId}`,
-  //       { headers: { authorization: cookies.access_Token } }
-  //     )
-  //     setUserInfo([response.data.UserInfo])
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
-
-  // const GetUserFriends = async () => {
-  //   try {
-  //     const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/${UserId}/friends`,
-  //       { headers: { authorization: cookies.access_Token } }
-  //     )
-  //     setUserFriends(response.data.FriendsArr);
-  //     setUserFriendsId(response.data.FriendsId)
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }
-
   const RemoveFriend = async (FriendId) => {
     let updatedFriendList;
     if (UserFriendsId.includes(FriendId)) {
@@ -107,26 +74,22 @@ export default function Profile() {
     }
   }
 
-  const toggleRedirect = async (ToRedirectUserId) => {
-    navigate('/redirectProfile', { state: { RedirectId: ToRedirectUserId } });
-    setRedirectUserId(ToRedirectUserId)
-    // navigate('/redirectProfile', { state: { RedirectId: ToRedirectUserId } });
-  }
-
   // const toggleRedirect = async (ToRedirectUserId) => {
-  //   if (ToggleValue === false) {
-  //     // Navigate to /redirectProfile and set RedirectUserId
-  //     navigate('/redirectProfile', { state: { RedirectId: ToRedirectUserId } });
-  //     setRedirectUserId(ToRedirectUserId);
-  //   } else {
-  //     // If already redirected, reset RedirectUserId to null
-  //     setRedirectUserId(null);
-  //     // we have to setRedirectUserId to null in navBar when we go to '/home'
-  //   }
+  //   navigate('/redirectProfile', { state: { RedirectId: ToRedirectUserId } });
+  //   setRedirectUserId(ToRedirectUserId)
+  // }
 
-  //   // Toggle the value after handling the redirection
-  //   setToggleValue(!ToggleValue);
-  // };
+  const toggleRedirect = async (ToRedirectUserId) => {
+    setRedirectUserId(ToRedirectUserId);
+  };
+
+  useEffect(() => {
+    if (redirectUserId) {
+      // Once redirectUserId is set, navigate to the redirectProfile page
+      navigate('/redirectProfile', { state: { RedirectId: redirectUserId } });
+    }
+  }, [redirectUserId]); // Trigger this effect whenever redirectUserId changes
+  
 
 
   console.log("UserInfo: ", UserInfo);
