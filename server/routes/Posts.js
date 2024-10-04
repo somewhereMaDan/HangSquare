@@ -5,7 +5,7 @@ import { version } from "mongoose";
 
 const router = express.Router()
 
-router.get("/allPosts", VerifyToken, GetAllPosts)
+router.get("/allPosts", GetAllPosts)
 
 router.get("/:UserId", VerifyToken, GetUserPosts)
 
