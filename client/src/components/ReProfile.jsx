@@ -74,7 +74,7 @@ function ReProfile() {
   }
 
   const toggleRedirect = async (RedirectUserId) => {
-    navigate('/redirectProfile', { state: { RedirectId: RedirectUserId } });
+    navigate('/redirectProfile');
   }
 
   useEffect(() => {
