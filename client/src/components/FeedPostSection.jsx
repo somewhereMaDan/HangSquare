@@ -18,7 +18,6 @@ import { TempContext } from '../Contexts/TempContext'
 
 function FeedPostSection() {
   const UserId = userGetId()
-  // const [UserInfo, setUserInfo] = useState([])
   const [ProfilePicture, setProfilePicture] = useState('')
   const [Description, setDescription] = useState('')
   const [cookies, setCookie] = useCookies(["access_Token"]);
@@ -42,22 +41,6 @@ function FeedPostSection() {
     // Step 3: Get the download URL for the uploaded image
     const downloadURL = await getDownloadURL(snapshot.ref);
     // console.log("Image URL:", downloadURL);
-
-    // const updatedPosts = [
-    //   ...PostsData, {
-    //     Title: "",
-    //     Owner: UserId,
-    //     Description: Description,
-    //     PicturePath: downloadURL,
-    //     UserPicturePath: UserInfo[0].PicturePath,
-    //     Likes: [],
-    //     Comments: {},
-    //     Location: ""
-    //   }
-    // ]
-
-    // setPostsData(updatedPosts)
-
     try {
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/posts/createPost/${UserId}`, {
         Description: Description,
@@ -65,14 +48,14 @@ function FeedPostSection() {
       }, { headers: { authorization: cookies.access_Token } })
       toast.success(response.data.message)
       const newPost = response.data.post
-      console.log("newPost: ", newPost);
-
-      // const updatedPosts = PostsData.map((post) => {
-      //   return 
-      // })
+      // console.log("newPost: ", newPost);
       const tempPostsData = [...PostsData, newPost]
       setPostsData(tempPostsData)
-      // console.log(response.data.user_posts);
+      setDescription('')  // Clear description input
+      // setProfilePicture(null)  // Clear file input
+      // if (fileInputRef.current) {
+      //   fileInputRef.current.value = '';  // Reset file input field
+      // }
     } catch (err) {
       console.log(err);
     }
