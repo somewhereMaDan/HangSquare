@@ -87,7 +87,9 @@
   .whole-profile-info{
     display: flex;
     height: 100%;
-    width: 100%;
+    width: 96%;
+    margin-left: 2%;
+    margin-right: 2%;
   }
   .responsive-btn,
   .logout-btn {
@@ -106,7 +108,10 @@
   .whole-profile-info{
     display: flex;
     height: 100%;
-    width: 100%;
+    width: 96%;
+    margin-bottom: 5%;
+    margin-left: 2%;
+    margin-right: 2%;
   }
   .responsive-btn {
     font-size: 14px;
@@ -130,7 +135,9 @@
   .whole-profile-info{
     display: flex;
     height: 100%;
-    width: 100%;
+    width: 96%;
+    margin-left: 2%;
+    margin-right: 2%;
   }
   .profile-nav {
     font-size: 10px;

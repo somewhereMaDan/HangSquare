@@ -28,7 +28,7 @@ function EditProfileDialog() {
   const { UserInfo, setUserInfo } = useContext(TempContext)
 
   const EditProfile = async () => {
-
+    toast.info("Saving Changes, Please wait...")
     try {
       const response = await axios.patch(`${import.meta.env.VITE_API_URL}/users/${UserId}/CompleteProfile`, {
         Location: Location,

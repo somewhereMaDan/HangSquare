@@ -165,7 +165,7 @@ function Feed() {
     <div className='whole-feed-div'>
       {
         (!PostsData || PostsData.length === 0) ? (
-          <div className='post-div'>No posts yet</div>
+          <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}} className='post-div'>No posts yet</div>
         ) : (
         PostsData && PostsData?.map((post, index) => {
           return (

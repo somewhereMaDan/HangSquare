@@ -32,7 +32,7 @@ function Login() {
 
   const OnRegister = async (e) => {
     e.preventDefault();
-    toast.info("Creating User...")
+    toast.info("Creating User, Please wait...")
     const ImgRef = ref(ImgDb, `ProfilePictures/${ProfilePicture.name}`)
     const snapshot = await uploadBytes(ImgRef, ProfilePicture);
     // Step 3: Get the download URL for the uploaded image
@@ -71,7 +71,7 @@ function Login() {
 
   const OnLogin = async (e) => {
     e.preventDefault()
-    toast.info("Loggin in...")
+    toast.info("Logging in, Please wait...")
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/auth/login`,
