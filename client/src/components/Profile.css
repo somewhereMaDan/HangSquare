@@ -90,6 +90,7 @@
     width: 96%;
     margin-left: 2%;
     margin-right: 2%;
+    margin-bottom: 5%;
   }
   .responsive-btn,
   .logout-btn {
@@ -138,6 +139,7 @@
     width: 96%;
     margin-left: 2%;
     margin-right: 2%;
+    margin-bottom: 5%;
   }
   .profile-nav {
     font-size: 10px;
