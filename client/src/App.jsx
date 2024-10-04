@@ -84,6 +84,9 @@ function Content() {
   }
 
   const GetUserFriends = async () => {
+    if (redirectUserId) {
+      UserId = redirectUserId
+    }
     try {
       const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/${UserId}/friends`,
         { headers: { authorization: cookies.access_Token } }

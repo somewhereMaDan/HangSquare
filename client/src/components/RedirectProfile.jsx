@@ -52,7 +52,7 @@ function RedirectProfile() {
   return (
       <div className='HomePage'>
         <div className='UserProfile'>
-          <Profile RedirectUserId={RedirectUserId}></Profile>
+          <Profile></Profile>
         </div>
         <div className='Feed-Section'>
           <div>

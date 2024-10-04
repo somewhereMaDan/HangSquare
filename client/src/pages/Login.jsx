@@ -93,6 +93,10 @@ function Login() {
     }
   }
 
+  const wip = () => {
+    alert("Work in Progress...")
+  }
+
   return (
     <div className="LoginPage">
       <div className={`container ${rightPanelActive ? "right-panel-active" : ""}`}>
@@ -116,7 +120,7 @@ function Login() {
             <h2 className="Register-Title" style={{ paddingBottom: "10%" }}>HangSquare</h2>
             <input type="email" value={Email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required />
             <input type="password" value={Password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" required />
-            <a href="#">Forgot your password?</a>
+            <a style={{ cursor: 'pointer' }} onClick={wip}>Forgot your password?</a>
             <button className="Login-Page-btn" type="submit">Sign In</button>
             <button style={{ position: "absolute", bottom: "30px" }} type="button" className="ghost" onClick={handleSignUpClick}>Register</button>
           </form>
