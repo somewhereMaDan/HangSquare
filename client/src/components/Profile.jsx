@@ -89,8 +89,9 @@ export default function Profile() {
       navigate('/redirectProfile', { state: { RedirectId: redirectUserId } });
     }
   }, [redirectUserId]); // Trigger this effect whenever redirectUserId changes
-  
 
+
+  const loggedUserFriendsCount = UserFriendsId.length;
 
   console.log("UserInfo: ", UserInfo);
   return (
@@ -112,7 +113,8 @@ export default function Profile() {
                       <button onClick={() => toggleRedirect(user._id)}>{user.firstName}</button>
                     </div>
                     <p className="text-sm text-muted-foreground">
-                      Friends {user.Friends.length}
+                      {/* Friends {user.Friends.length} */}
+                      Friends {loggedUserFriendsCount}
                     </p>
                   </div>
                 </div>
