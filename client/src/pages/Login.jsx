@@ -11,6 +11,7 @@ import { ImgDb } from '../Firebase'
 function Login() {
   const navigate = useNavigate();
   const [rightPanelActive, setRightPanelActive] = useState(false);
+  const [loading, setLoading] = useState(false); // New loading state
 
   const handleSignUpClick = () => {
     setRightPanelActive(true); // Show sign-up form
@@ -32,6 +33,7 @@ function Login() {
 
   const OnRegister = async (e) => {
     e.preventDefault();
+    setLoading(true)
     toast.info("Creating User, Please wait...")
     const ImgRef = ref(ImgDb, `ProfilePictures/${ProfilePicture.name}`)
     const snapshot = await uploadBytes(ImgRef, ProfilePicture);
@@ -71,6 +73,7 @@ function Login() {
 
   const OnLogin = async (e) => {
     e.preventDefault()
+    setLoading(true)
     toast.info("Logging in, Please wait...")
     try {
       const response = await axios.post(
@@ -109,7 +112,7 @@ function Login() {
             <Input onChange={(e) => setProfilePicture(e.target.files[0])} id="picture" type="file" required />
             <input type="email" placeholder="Email" value={Email} onChange={(e) => setEmail(e.target.value)} required />
             <input type="password" placeholder="Password" value={Password} onChange={(e) => setPassword(e.target.value)} required />
-            <button className="Login-Page-btn" type="submit">Register</button>
+            <button className="Login-Page-btn" type="submit" disabled={loading}>{loading ? "Registering User..." : "Register"}</button>
             <button style={{ position: "absolute", bottom: "7px", width: "60%" }} type="button" className="ghost" onClick={handleSignInClick}>Go Back</button>
           </form>
         </div>
@@ -121,7 +124,7 @@ function Login() {
             <input type="email" value={Email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required />
             <input type="password" value={Password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" required />
             <a style={{ cursor: 'pointer' }} onClick={wip}>Forgot your password?</a>
-            <button className="Login-Page-btn" type="submit">Sign In</button>
+            <button className="Login-Page-btn" type="submit" disabled={loading}>{loading ? "Signing In..." : "Sign In"}</button>
             <button style={{ position: "absolute", bottom: "30px" }} type="button" className="ghost" onClick={handleSignUpClick}>Register</button>
           </form>
         </div>
