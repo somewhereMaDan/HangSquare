@@ -43,8 +43,8 @@ export default function Profile() {
 
   const LoggedUserId = userGetId()
 
-  if (redirectUserId === null) {
-    UserId = userGetId()
+  if (!redirectUserId) {
+    UserId = LoggedUserId
   } else {
     UserId = redirectUserId
   }
