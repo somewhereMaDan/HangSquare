@@ -91,6 +91,7 @@ function Login() {
       window.localStorage.setItem("UserId", response.data.UserId)
       toast.success(response.data.message)
       navigate("/home")
+      setLoading(false)
     } catch (error) {
       setLoading(false)
       toast.error("Invalid Email Id or Password")

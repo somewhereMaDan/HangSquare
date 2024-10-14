@@ -7,8 +7,10 @@ import { UserRouter } from "./routes/Users.js";
 import { PostRouter } from "./routes/Posts.js";
 import path from 'path'
 import { fileURLToPath } from 'url';
+import { ChatRouter } from "./routes/message.js";
+import { app, server } from './Socket/socket.js'
 
-const app = express();
+// const app = express();
 dotenv.config()
 
 const __filename = fileURLToPath(import.meta.url);
@@ -26,15 +28,16 @@ app.get("/", async (req, res) => {
 app.use("/auth", Auth)
 app.use("/users", UserRouter)
 app.use("/posts", PostRouter)
+app.use('/ChatApp', ChatRouter)
 
-app.use(express.static(path.join(__dirname, 'client/dist')));
+// app.use(express.static(path.join(__dirname, 'client/dist')));
 
 // Catch-all handler to send index.html for any other route
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client/dist', 'index.html'));
-});
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'client/dist', 'index.html'));
+// });
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running at PORT ${PORT}`);
 })
 

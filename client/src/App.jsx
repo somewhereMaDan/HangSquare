@@ -10,6 +10,8 @@ import { useCookies } from 'react-cookie'
 import { userGetId } from './hooks/userGetId';
 import { TempContext } from './Contexts/TempContext'
 import axios from 'axios';
+import io from 'socket.io-client'
+import ChatSection from './pages/ChatSection';
 
 function App() {
   return (
@@ -35,6 +37,10 @@ function Content() {
   const [UserFriends, setUserFriends] = useState([])
   const [UserFriendsId, setUserFriendsId] = useState([])
   let UserId = userGetId()
+  const LoggedUserId = userGetId()
+
+  const [socket, setSocket] = useState('')
+  const [OnlineUsers, setOnlineUsers] = useState([])
 
   let ProfileInfo
   if (redirectUserId) {
@@ -117,6 +123,26 @@ function Content() {
     } else {
       Posts()
     }
+
+    if (LoggedUserId) {
+      const socket = io(`${import.meta.env.VITE_API_URL}`, {
+        query: {
+          userId: LoggedUserId
+        }
+      })
+      setSocket(socket)
+      socket.on('GetOnlineUsers', (users) => {
+        setOnlineUsers(users)
+      })
+      return () => {
+        socket.close()
+      }
+    } else {
+      if (socket) {
+        socket.close()
+        setSocket(null)
+      }
+    }
   }, [redirectUserId, UserId]) // Adding redirectUserId to the dependency array
 
 
@@ -128,6 +154,7 @@ function Content() {
         {/* {cookies.access_Token ? <Route path='/home' element={<Homepage />} /> : <Route path='/' element={<Login />} />} */}
         {cookies.access_Token && <Route path='/home' element={<Homepage />} />}
         <Route path='/redirectProfile' element={<RedirectProfile />} />
+        <Route path='/ChatSection' element={<ChatSection />} />
       </Routes>
     </TempContext.Provider>
   )
