@@ -37,10 +37,6 @@ function Content() {
   const [UserFriends, setUserFriends] = useState([])
   const [UserFriendsId, setUserFriendsId] = useState([])
   let UserId = userGetId()
-  const LoggedUserId = userGetId()
-
-  const [socket, setSocket] = useState('')
-  const [OnlineUsers, setOnlineUsers] = useState([])
 
   let ProfileInfo
   if (redirectUserId) {
@@ -122,26 +118,6 @@ function Content() {
       GetUserPosts()
     } else {
       Posts()
-    }
-
-    if (LoggedUserId) {
-      const socket = io(`${import.meta.env.VITE_API_URL}`, {
-        query: {
-          userId: LoggedUserId
-        }
-      })
-      setSocket(socket)
-      socket.on('GetOnlineUsers', (users) => {
-        setOnlineUsers(users)
-      })
-      return () => {
-        socket.close()
-      }
-    } else {
-      if (socket) {
-        socket.close()
-        setSocket(null)
-      }
     }
   }, [redirectUserId, UserId]) // Adding redirectUserId to the dependency array
 

@@ -9,7 +9,6 @@ import ChatWindow from './ChatWindow'
 
 function ChatSection() {
   const { UserFriends, UserFriendsId } = useContext(TempContext)
-  const LoggedUserId = userGetId()
   // const FriendId = '6700c8232072a75dc7563cd1' //alice
   const [FriendId, setFriendId] = useState('')
   const GetFriendId = (FriendId) => {

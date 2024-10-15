@@ -1,13 +1,15 @@
 import { React, useState, useEffect } from 'react'
 import axios from 'axios'
 import { userGetId } from '@/hooks/userGetId'
+import { io } from 'socket.io-client'
 
 function ChatWindow({ FriendId }) {
   const [MsgText, setMsgText] = useState('')
   const [MessageList, setMessageList] = useState([])
   // const FriendId = '6700c8232072a75dc7563cd1' //alice
   const LoggedUserId = userGetId()
-
+  const [socket, setSocket] = useState('')
+  const [OnlineUsers, setOnlineUsers] = useState([])
 
   const SendMessage = async () => {
     try {
@@ -15,9 +17,7 @@ function ChatWindow({ FriendId }) {
         message: MsgText,
         senderId: LoggedUserId
       })
-      // setMessageList((prevMsgContent) => [...prevMsgContent, response.data.newMessage])
       setMessageList((prev) => [...prev, response.data.newMessage])
-      console.log("By Sending Message: ", response.data);
     } catch (err) {
       console.log(err);
     }
@@ -29,8 +29,6 @@ function ChatWindow({ FriendId }) {
         senderId: LoggedUserId
       })
       setMessageList(response.data.messages);
-
-      // console.log("From GetMessages: ", response.data);
     } catch (err) {
       if (err.response && err.response.status === 404) {
         // Handle the 404 error specifically
@@ -48,6 +46,39 @@ function ChatWindow({ FriendId }) {
     if (FriendId) {
       setMessageList([])
       GetMessages()
+    }
+    if (LoggedUserId) {
+      const socket = io(`${import.meta.env.VITE_API_URL}`, {
+        transports: ['websocket'], // Ensure websocket transport is enabled
+        query: {
+          userId: LoggedUserId
+        }
+      })
+      socket.on('newMessage', (newMessage) => {
+        console.log('socket is working/..');
+        // Only add the message to the chat if it belongs to the current conversation
+        if (newMessage.senderId === LoggedUserId && newMessage.receiverId === FriendId) {
+          setMessageList((prev) => [...prev, newMessage])
+        }
+      })
+      socket.on('GetOnlineUsers', (users) => {
+        setOnlineUsers(users)
+      })
+      return () => {
+        socket.close()
+      }
+    } else {
+      if (socket) {
+        socket.close()
+        setSocket(null)
+      }
+    }
+
+    // Clean up the listener when the component unmounts or FriendId changes
+    return () => {
+      if (socket) {
+        socket.off('newMessage')
+      }
     }
   }, [FriendId])
   return (

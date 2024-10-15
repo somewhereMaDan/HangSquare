@@ -41,7 +41,7 @@ export const sendMessage = async (req, res) => {
     senderId,
     receiverId,
     message,
-    author : LoggedUser.firstName,
+    author: LoggedUser.firstName,
   })
 
   if (newMessage) {
@@ -51,6 +51,8 @@ export const sendMessage = async (req, res) => {
   await Promise.all([conversation.save(), newMessage.save()])
 
   const ReceivedSocketId = getReceiverSocketId(receiverId)
+  console.log('ReceivedSocketId: ', ReceivedSocketId);
+
   if (ReceivedSocketId) {
     io.to(ReceivedSocketId).emit('newMessage', newMessage)
   }
