@@ -7,7 +7,7 @@ import './ChatSection.css'
 import { Separator } from "@/components/ui/separator"
 import ChatWindow from './ChatWindow'
 
-function ChatSection() {
+function ChatSection({ socket }) {
   const { UserFriends, UserFriendsId } = useContext(TempContext)
   // const FriendId = '6700c8232072a75dc7563cd1' //alice
   const [FriendId, setFriendId] = useState('')

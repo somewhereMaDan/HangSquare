@@ -1,14 +1,16 @@
-import { React, useState, useEffect } from 'react'
+import { React, useState, useEffect, useContext } from 'react'
 import axios from 'axios'
 import { userGetId } from '@/hooks/userGetId'
 import { io } from 'socket.io-client'
+import OnlineIcon from '../assets/OnlineIcon.png'
+import { TempContext } from '@/Contexts/TempContext'
 
 function ChatWindow({ FriendId }) {
   const [MsgText, setMsgText] = useState('')
   const [MessageList, setMessageList] = useState([])
   // const FriendId = '6700c8232072a75dc7563cd1' //alice
   const LoggedUserId = userGetId()
-  const [socket, setSocket] = useState('')
+  // const [socket, setSocket] = useState('')
   const [OnlineUsers, setOnlineUsers] = useState([])
 
   const SendMessage = async () => {
@@ -17,7 +19,6 @@ function ChatWindow({ FriendId }) {
         message: MsgText,
         senderId: LoggedUserId
       })
-      setMessageList((prev) => [...prev, response.data.newMessage])
     } catch (err) {
       console.log(err);
     }
@@ -40,7 +41,9 @@ function ChatWindow({ FriendId }) {
     }
   }
   // console.log(UserFriends);
-  console.log(MessageList);
+  // console.log(MessageList);
+  console.log(OnlineUsers);
+
 
   useEffect(() => {
     if (FriendId) {
@@ -54,13 +57,13 @@ function ChatWindow({ FriendId }) {
           userId: LoggedUserId
         }
       })
-      socket.on('newMessage', (newMessage) => {
-        console.log('socket is working/..');
-        // Only add the message to the chat if it belongs to the current conversation
-        if (newMessage.senderId === LoggedUserId && newMessage.receiverId === FriendId) {
-          setMessageList((prev) => [...prev, newMessage])
-        }
-      })
+      if (socket) {
+        socket.on('newMessage', (newMessage) => {
+          if (newMessage.senderId === FriendId && newMessage.receiverId === LoggedUserId) {
+            setMessageList((prev) => [...prev, newMessage])
+          }
+        })
+      }
       socket.on('GetOnlineUsers', (users) => {
         setOnlineUsers(users)
       })
@@ -79,12 +82,17 @@ function ChatWindow({ FriendId }) {
       if (socket) {
         socket.off('newMessage')
       }
+      setOnlineUsers(null)
     }
   }, [FriendId])
+
   return (
     <div>
       <div className='chat-window'>
-        <div className='chat-header'>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} className='chat-header'>
+          {
+            OnlineUsers?.includes(FriendId) && <img style={{ height: '2vh' }} src={OnlineIcon}></img>
+          }
           <p>Live Chat</p>
         </div>
         <div className='chat-body'>

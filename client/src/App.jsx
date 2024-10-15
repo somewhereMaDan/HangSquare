@@ -99,17 +99,7 @@ function Content() {
       console.log(err);
     }
   }
-
-  // useEffect(() => {
-  //   // Posts()
-  //   ProfileInfo()
-  //   GetUserFriends()
-  //   if (redirectUserId !== null) {
-  //     GetUserPosts()
-  //   }else{
-  //     Posts()
-  //   }
-  // }, [])
+  
   useEffect(() => {
     ProfileInfo()
     GetUserFriends()
