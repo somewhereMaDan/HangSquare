@@ -25,10 +25,8 @@ export const Navbar = () => {
   };
 
   const ToRedirectProfile = async () => {
-    console.log('LoggedUserId:', LoggedUserId);
     if (LoggedUserId) {
       setRedirectUserId(LoggedUserId);
-      console.log("LoggedUserId from Navbar: ", LoggedUserId);
     } else {
       console.error('LoggedUserId is not available.');
     }

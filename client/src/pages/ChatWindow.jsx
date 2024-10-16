@@ -4,6 +4,12 @@ import { userGetId } from '@/hooks/userGetId'
 import { io } from 'socket.io-client'
 import OnlineIcon from '../assets/OnlineIcon.png'
 import { TempContext } from '@/Contexts/TempContext'
+import { Input } from "@/components/ui/input"
+import { ChevronRight } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Textarea } from "@/components/ui/textarea"
+
+
 
 function ChatWindow({ FriendId }) {
   const [MsgText, setMsgText] = useState('')
@@ -19,6 +25,7 @@ function ChatWindow({ FriendId }) {
         message: MsgText,
         senderId: LoggedUserId
       })
+      setMessageList((prev) => [...prev, response.data.newMessage])
       setMsgText('')
     } catch (err) {
       console.log(err);
@@ -41,7 +48,7 @@ function ChatWindow({ FriendId }) {
       }
     }
   }
-  console.log(OnlineUsers);
+  // console.log(OnlineUsers);
 
 
   useEffect(() => {
@@ -86,38 +93,48 @@ function ChatWindow({ FriendId }) {
   }, [FriendId])
 
   return (
-    <div>
+    <div className='chat-window-inner-div'>
       <div className='chat-window'>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} className='chat-header'>
-          {
-            OnlineUsers?.includes(FriendId) && <img style={{ height: '2vh' }} src={OnlineIcon}></img>
-          }
-          <p>Live Chat</p>
-        </div>
-        <div className='chat-body'>
-          {MessageList.length !== 0 ? MessageList.map((messageContent) => {
-            return (
-              <div
-                className="message"
-                id={LoggedUserId === messageContent.senderId ? "other" : "you"}
-                key={messageContent._id}
-              >
-                <div>
-                  <div className="message-content">
-                    <p>{messageContent.message}</p>
-                  </div>
-                  <div className="message-meta">
-                    <p id="time">{messageContent.createdAt}</p>
-                    <p id="author">{messageContent.author}</p>
+        <div className='firstHalf-chat-window'>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '1%' }} className='chat-header'>
+            {
+              OnlineUsers?.includes(FriendId) && <img style={{ height: '2vh' }} src={OnlineIcon}></img>
+            }
+            <p>Live Chat</p>
+          </div>
+          <div className='chat-body'>
+            {MessageList.length !== 0 ? MessageList.map((messageContent) => {
+              return (
+                <div
+                  className="message"
+                  id={LoggedUserId === messageContent.senderId ? "other" : "you"}
+                  key={messageContent._id}
+                >
+                  <div>
+                    <div className="message-content">
+                      <p>{messageContent.message}</p>
+                    </div>
+                    <div className="message-meta">
+                      <p id="time">{new Date(messageContent.createdAt).toLocaleString()}</p>
+                      <p id="author">{messageContent.author}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          }) : (<div>No Conversation yet..</div>)}
+              );
+            }) : (<div>No Conversation yet..</div>)}
+          </div>
         </div>
-        <div className='chat-footer'>
-          <input onChange={(e) => setMsgText(e.target.value)} value={MsgText} type='text' placeholder='This is a message'></input>
-          <button onClick={SendMessage}>Send</button>
+        <div className='SecondHalf-chat-window'>
+          <div className='chat-footer'>
+            <div style={{ width: '100%' }}>
+              {/* <Input onChange={(e) => setMsgText(e.target.value)} value={MsgText} type='text' placeholder='This is a message'></Input> */}
+              <Textarea style={{ height: '1vh' }} onChange={(e) => setMsgText(e.target.value)} value={MsgText} placeholder="Send a message" />
+            </div>
+            {/* <button >Send</button> */}
+            <Button className='sendMsgBtn' style={{ marginLeft: '2%', width: '10%', }} onClick={SendMessage} variant="outline" size="icon">
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </div>
     </div>

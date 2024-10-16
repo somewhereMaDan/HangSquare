@@ -154,7 +154,7 @@ function Feed() {
 
   const toggleRedirect = async (ToRedirectUserId) => {
     navigate('/redirectProfile', { state: { RedirectId: ToRedirectUserId } });
-    console.log("redirect user id from feed.jsx : ", ToRedirectUserId);
+    // console.log("redirect user id from feed.jsx : ", ToRedirectUserId);
     setRedirectUserId(ToRedirectUserId)
 
   }

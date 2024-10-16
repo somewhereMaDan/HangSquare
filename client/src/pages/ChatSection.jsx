@@ -21,39 +21,38 @@ function ChatSection({ socket }) {
       {/* <h1>ChatSection</h1>
       <input onChange={(e) => setMsgText(e.target.value)} type='text' placeholder='Type a message' />
       <Button onClick={SendMessage}>Send Message</Button> */}
-      <div className='friend-list'>
-        <h3>Friend List</h3>
-        <Separator className="my-4" />
+      <div className='friend-list-chat-section-inside'>
+        <div className='friend-list-chat-section'>
+          <h3>Friend List</h3>
+          <Separator className="my-4" />
+          {
+            UserFriends?.map((friend) => {
+              if (UserFriendsId.includes(friend._id)) {
+                return (
+                  <div key={friend._id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: '4%' }}>
+                    <div>
+                      <div>{friend.firstName} {friend.lastName}</div>
+                      <p className="text-sm text-muted-foreground">
+                        {friend.Bio}
+                      </p>
+                    </div>
+                    <div style={{ marginLeft: '2%' }}>
+                      {
+                        <Button onClick={() => GetFriendId(friend._id)}>Chat</Button>
+                      }
+                    </div>
+                  </div>
+                )
+              }
+            })
+          }
+        </div>
+      </div>
+      <div className='chat-window-div'>
         {
-          UserFriends?.map((friend) => {
-            if (UserFriendsId.includes(friend._id)) {
-              return (
-                <div key={friend._id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: '4%' }}>
-                  <div>
-                    <div>{friend.firstName} {friend.lastName}</div>
-                    <p className="text-sm text-muted-foreground">
-                      {friend.Bio}
-                    </p>
-                  </div>
-                  <div>
-                    {/* {
-                      LoggedUserId === UserId && <button onClick={() => RemoveFriend(friend._id)}>
-                        <img style={{ height: "2.5vh", borderRadius: "5px" }} src={RemoveFriendPic}></img>
-                      </button>
-                    } */}
-                    {
-                      <Button onClick={() => GetFriendId(friend._id)}>Chat</Button>
-                    }
-                  </div>
-                </div>
-              )
-            }
-          })
+          FriendId && <ChatWindow FriendId={FriendId}></ChatWindow>
         }
       </div>
-      {
-        FriendId && <ChatWindow FriendId={FriendId}></ChatWindow>
-      }
     </div>
   )
 }
