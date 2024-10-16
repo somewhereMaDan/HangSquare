@@ -143,7 +143,6 @@ export const DeleteComment = async (req, res) => {
     const { UserId, PostId } = req.params
     const { CommentId } = req.body
 
-    // console.log(CommentId);
     const post = await PostModel.findById(PostId).populate('Owner')
 
     if (!post) {
@@ -167,9 +166,6 @@ export const DeleteComment = async (req, res) => {
       },
       { new: true }  // Return the updated document
     );
-
-    // console.log("UserId: ", UserId);
-    // console.log("Comment user id : ", comment.UserId);
 
     return res.status(200).json({ message: "Comment Deleted", comment: comment, Post: updatedPost })
   } catch (err) {

@@ -19,6 +19,7 @@ function ChatWindow({ FriendId }) {
         message: MsgText,
         senderId: LoggedUserId
       })
+      setMsgText('')
     } catch (err) {
       console.log(err);
     }
@@ -40,8 +41,6 @@ function ChatWindow({ FriendId }) {
       }
     }
   }
-  // console.log(UserFriends);
-  // console.log(MessageList);
   console.log(OnlineUsers);
 
 

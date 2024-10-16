@@ -27,41 +27,46 @@ function App() {
 export const GlobalContext = createContext();
 
 function Content() {
-  // const [cookies, setCookie] = useCookies(["access_Token"]);
   const location = useLocation(); // Moved useLocation inside the BrowserRouter
-
   const [redirectUserId, setRedirectUserId] = useState(null);
   const [PostsData, setPostsData] = useState([])
   const [UserInfo, setUserInfo] = useState([])
   const [cookies, setCookie] = useCookies(["access_Token"]);
   const [UserFriends, setUserFriends] = useState([])
   const [UserFriendsId, setUserFriendsId] = useState([])
+  const [isLoading, setIsLoading] = useState(true);
   let UserId = userGetId()
 
-  let ProfileInfo
-  if (redirectUserId) {
-    ProfileInfo = async () => {
-      try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/${redirectUserId}`,
-          { headers: { authorization: cookies.access_Token } }
-        )
-        setUserInfo([response.data.UserInfo])
-      } catch (error) {
-        console.log(error);
-      }
+  // let ProfileInfo
+  // if (redirectUserId) {
+  //   ProfileInfo = async () => {
+  //     try {
+  //       const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/${redirectUserId}`,
+  //         { headers: { authorization: cookies.access_Token } }
+  //       )
+  //       setUserInfo([response.data.UserInfo])
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   }
+  // } else {
+  const ProfileInfo = async () => {
+    setIsLoading(true);
+    if (redirectUserId) {
+      UserId = redirectUserId
     }
-  } else {
-    ProfileInfo = async () => {
-      try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/${UserId}`,
-          { headers: { authorization: cookies.access_Token } }
-        )
-        setUserInfo([response.data.UserInfo])
-      } catch (error) {
-        console.log(error);
-      }
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/${UserId}`,
+        { headers: { authorization: cookies.access_Token } }
+      )
+      setUserInfo([response.data.UserInfo])
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false)
     }
   }
+  // }
 
   const Posts = async () => {
     try {
@@ -75,6 +80,7 @@ function Content() {
   }
 
   const GetUserPosts = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get(`${import.meta.env.VITE_API_URL}/posts/${redirectUserId}`,
         { headers: { authorization: cookies.access_Token } }
@@ -82,6 +88,8 @@ function Content() {
       setPostsData(response.data.UserPosts)
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -99,15 +107,20 @@ function Content() {
       console.log(err);
     }
   }
-  
+
   useEffect(() => {
-    ProfileInfo()
-    GetUserFriends()
+    if (UserId) {
+      ProfileInfo();
+      GetUserFriends();
+      setIsLoading(false);
+    } else {
+      console.log("UserId is not available yet, waiting...");
+    }
 
     if (redirectUserId !== null) {
-      GetUserPosts()
+      GetUserPosts();
     } else {
-      Posts()
+      Posts();
     }
   }, [redirectUserId, UserId]) // Adding redirectUserId to the dependency array
 
@@ -125,5 +138,6 @@ function Content() {
     </TempContext.Provider>
   )
 }
+
 
 export default App;

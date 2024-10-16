@@ -16,7 +16,7 @@ export const Navbar = () => {
 
   const logout = () => {
     setCokkies("access_Token", "");
-    window.localStorage.removeItem("userID");
+    window.localStorage.removeItem("UserId");
     navigate("/");
   };
 
@@ -28,6 +28,7 @@ export const Navbar = () => {
     console.log('LoggedUserId:', LoggedUserId);
     if (LoggedUserId) {
       setRedirectUserId(LoggedUserId);
+      console.log("LoggedUserId from Navbar: ", LoggedUserId);
     } else {
       console.error('LoggedUserId is not available.');
     }

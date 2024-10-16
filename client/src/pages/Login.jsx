@@ -39,7 +39,6 @@ function Login() {
     const snapshot = await uploadBytes(ImgRef, ProfilePicture);
     // Step 3: Get the download URL for the uploaded image
     const downloadURL = await getDownloadURL(snapshot.ref);
-    // console.log("Image URL:", downloadURL);
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/auth/register`,

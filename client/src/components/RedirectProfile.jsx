@@ -1,4 +1,4 @@
-import { React, useState, useEffect, createContext } from 'react'
+import { React, useState, useEffect, createContext, useContext } from 'react'
 import Advertisment from './Advertisment'
 import Profile from './Profile'
 import UserFeed from './OwnFeed'
@@ -9,12 +9,12 @@ import { useCookies } from 'react-cookie'
 import axios from 'axios';
 import ReProfile from './ReProfile';
 import Feed from './Feed';
+import { TempContext } from '@/Contexts/TempContext';
 
 export const GlobalContext = createContext();
 function RedirectProfile() {
   const location = useLocation();
-  const RedirectUserId = location.state?.RedirectId;
-  // console.log("RedirectUserId from RedirectProfile.jsx: ", RedirectUserId);
+  const { redirectUserId } = useContext(TempContext)
   const [RePostsData, setRePostsData] = useState([])
   const [ReUserInfo, setReUserInfo] = useState([])
   const [cookies, setCookie] = useCookies(["access_Token"]);
@@ -23,7 +23,7 @@ function RedirectProfile() {
 
   const Posts = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/posts/${RedirectUserId}`,
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/posts/${redirectUserId}`,
         { headers: { authorization: cookies.access_Token } }
       )
       setRePostsData(response.data.UserPosts)
@@ -34,7 +34,7 @@ function RedirectProfile() {
 
   const ProfileInfo = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/${RedirectUserId}`,
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/${redirectUserId}`,
         { headers: { authorization: cookies.access_Token } }
       )
       setReUserInfo([response.data.UserInfo])
@@ -50,19 +50,19 @@ function RedirectProfile() {
 
 
   return (
-      <div className='HomePage'>
-        <div className='UserProfile'>
-          <Profile></Profile>
-        </div>
-        <div className='Feed-Section'>
-          <div>
-            <Feed></Feed>
-          </div>
-        </div>
-        <div className='Advertisment'>
-          <Advertisment />
+    <div className='HomePage'>
+      <div className='UserProfile'>
+        <Profile></Profile>
+      </div>
+      <div className='Feed-Section'>
+        <div>
+          <Feed></Feed>
         </div>
       </div>
+      <div className='Advertisment'>
+        <Advertisment />
+      </div>
+    </div>
   )
 }
 

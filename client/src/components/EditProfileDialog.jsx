@@ -38,9 +38,6 @@ function EditProfileDialog() {
       }, { headers: { authorization: cookies.access_Token } })
       setOpen(false)
       const updatedUserInfo = response.data.user
-      // const tempData = UserInfo.filter((user) => {
-      //   return user._id === UserId ? updatedUserInfo : user
-      // })
       setUserInfo([updatedUserInfo])
       toast.success(response.data.message)
     } catch (err) {

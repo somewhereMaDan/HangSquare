@@ -36,24 +36,6 @@ function AddCommentDialog({ PostId }) {
     }
 
     const commentId = uuidv4()
-    // const updatedPosts = PostsData?.map((post) => {
-    //   const newComment = {
-    //     id: commentId, // Use UUID as the key
-    //     UserId,
-    //     Username: post.Owner.firstName + " " + post.Owner.lastName,
-    //     CommentText: Comment,
-    //     CreatedAt: new Date() // Current date
-    //   }
-    //   if (post) {
-    //     if (post._id === PostId) {
-    //       const updatedComment = { ...post.Comments, [commentId]: newComment };
-    //       return { ...post, Comments: updatedComment }
-    //     }
-    //   }
-    //   return post
-    // })
-
-    // setPostsData(updatedPosts)
     try {
       const response = await axios.patch(`${import.meta.env.VITE_API_URL}/posts/${UserId}/AddComment/${PostId}`, {
         comment: Comment,

@@ -55,13 +55,6 @@ export default function Profile() {
       updatedFriendList = UserFriendsId.filter(Id => Id !== FriendId);
     }
     setUserFriendsId(updatedFriendList)
-    console.log("Friend id to remove: ", FriendId);
-    // const updatedFriendInfo = UserFriendsId.filter((friend) => {
-    //   return friend._id !== FriendId
-    // })
-
-    // // const updatedFriendList = {...UserFriends, updatedFriendInfo}
-    // setUserFriendsId(updatedFriendInfo);
     toast.info("Updating Friend List")
 
     try {
@@ -73,12 +66,6 @@ export default function Profile() {
       console.log(err);
     }
   }
-
-  // const toggleRedirect = async (ToRedirectUserId) => {
-  //   navigate('/redirectProfile', { state: { RedirectId: ToRedirectUserId } });
-  //   setRedirectUserId(ToRedirectUserId)
-  // }
-
   const toggleRedirect = async (ToRedirectUserId) => {
     setRedirectUserId(ToRedirectUserId);
   };
@@ -92,8 +79,6 @@ export default function Profile() {
 
 
   const loggedUserFriendsCount = UserFriendsId.length;
-
-  console.log("UserInfo: ", UserInfo);
   return (
     <div className='whole-profile-info'>
       {
@@ -113,7 +98,6 @@ export default function Profile() {
                       <button onClick={() => toggleRedirect(user._id)}>{user.firstName}</button>
                     </div>
                     <p className="text-sm text-muted-foreground">
-                      {/* Friends {user.Friends.length} */}
                       Friends {loggedUserFriendsCount}
                     </p>
                   </div>

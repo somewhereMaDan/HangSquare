@@ -25,17 +25,13 @@ import { v4 as uuidv4 } from 'uuid';
 function Feed() {
   let UserId = userGetId();
   let LoggedUserId = userGetId()
-
   const { PostsData, setPostsData, UserInfo, setUserInfo, UserFriends, setUserFriends, UserFriendsId, setUserFriendsId, redirectUserId, setRedirectUserId } = useContext(TempContext)
-  // const [PostsData, setPostsData] = useState([])
   const navigate = useNavigate()
   const [cookies, setCookie] = useCookies(["access_Token"]);
 
   if (redirectUserId !== null) {
     UserId = redirectUserId
-    // LoggedUserId = redirectUserId
   }
-  console.log("post data: ", PostsData);
 
   const RemoveAddFriend = async (PostOwnerId, Owner) => {
     let updatedFriendList;
