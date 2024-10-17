@@ -65,6 +65,7 @@ function Login() {
       setPassword("")
       toast.success(response.data.message)
       setRightPanelActive(false);
+      setLoading(false)
     } catch (err) {
       setLoading(false)
       console.log(err);
@@ -100,6 +101,11 @@ function Login() {
 
   const wip = () => {
     alert("Work in Progress...")
+  }
+
+  if(loading){
+    console.log("loading state of login.jsx");
+    <div className="loader"></div>
   }
 
   return (

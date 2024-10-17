@@ -50,7 +50,10 @@ function ChatSection({ socket }) {
       </div>
       <div className='chat-window-div'>
         {
-          FriendId && <ChatWindow FriendId={FriendId}></ChatWindow>
+          FriendId ? <ChatWindow FriendId={FriendId}></ChatWindow> :
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+              <div>Select a <b>Friend</b> from <b>Friend-List</b> to Chat with...</div>
+            </div>
         }
       </div>
     </div>

@@ -11,14 +11,14 @@ export const getMessages = async (req, res) => {
     participants: { $all: [senderId, receiverId] }
   }).populate('messages')
 
-  const LoggedUser = await UserModel.findById(senderId)
-  const UserFriend = await UserModel.findById(receiverId)
+  // const LoggedUser = await UserModel.findById(senderId)
+  // const UserFriend = await UserModel.findById(receiverId)
 
   if (!conversation) return res.status(404).json({ message: 'Unable to find the conversation' })
 
   const messages = conversation.messages
 
-  return res.status(200).json({ messages: messages, LoggedUserName: LoggedUser.firstName, UserFriendName: UserFriend.firstName })
+  return res.status(200).json({ messages: messages })
 }
 
 export const sendMessage = async (req, res) => {
@@ -28,6 +28,7 @@ export const sendMessage = async (req, res) => {
   let conversation = await ConversationModal.findOne({
     participants: { $all: [senderId, receiverId] }
   })
+  // $all is a MongoDB operator that matches arrays that contain all elements specified in the array.
 
   if (!conversation) {
     conversation = await ConversationModal.create({

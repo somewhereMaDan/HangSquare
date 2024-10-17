@@ -8,18 +8,21 @@ import { Input } from "@/components/ui/input"
 import { ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
+import { toast } from 'sonner'
 
 
 
 function ChatWindow({ FriendId }) {
   const [MsgText, setMsgText] = useState('')
   const [MessageList, setMessageList] = useState([])
-  // const FriendId = '6700c8232072a75dc7563cd1' //alice
   const LoggedUserId = userGetId()
-  // const [socket, setSocket] = useState('')
   const [OnlineUsers, setOnlineUsers] = useState([])
 
   const SendMessage = async () => {
+    if(MsgText.trim() === ''){
+      toast.info('Please enter a message!')
+      return
+    }
     try {
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/ChatApp/send/${FriendId}`, {
         message: MsgText,
@@ -126,14 +129,14 @@ function ChatWindow({ FriendId }) {
         </div>
         <div className='SecondHalf-chat-window'>
           <div className='chat-footer'>
-            <div style={{ width: '100%' }}>
+            <div className='Chat-TextArea'>
               {/* <Input onChange={(e) => setMsgText(e.target.value)} value={MsgText} type='text' placeholder='This is a message'></Input> */}
               <Textarea style={{ height: '1vh' }} onChange={(e) => setMsgText(e.target.value)} value={MsgText} placeholder="Send a message" />
             </div>
             {/* <button >Send</button> */}
-            <Button className='sendMsgBtn' style={{ marginLeft: '2%', width: '10%', }} onClick={SendMessage} variant="outline" size="icon">
+            <button className='sendMsgBtn' style={{ marginLeft: '1%'}} onClick={SendMessage} variant="outline" size="icon">
               <ChevronRight className="h-4 w-4" />
-            </Button>
+            </button>
           </div>
         </div>
       </div>

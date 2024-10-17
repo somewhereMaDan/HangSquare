@@ -35,7 +35,9 @@ function Content() {
   const [UserFriends, setUserFriends] = useState([])
   const [UserFriendsId, setUserFriendsId] = useState([])
   const [isLoading, setIsLoading] = useState(true);
+  const [Socket, setSocket] = useState(null)
   let UserId = userGetId()
+  const LoggedUserId = userGetId()
 
   // let ProfileInfo
   // if (redirectUserId) {
@@ -115,6 +117,15 @@ function Content() {
       setIsLoading(false);
     } else {
       console.log("UserId is not available yet, waiting...");
+    }
+
+    if (LoggedUserId) {
+      const socket = io(`${import.meta.env.VITE_API_URL}`, {
+        transports: ['websocket'], // Ensure websocket transport is enabled
+        query: {
+          userId: LoggedUserId
+        }
+      })
     }
 
     if (redirectUserId !== null) {

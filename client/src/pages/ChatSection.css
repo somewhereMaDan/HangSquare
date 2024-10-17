@@ -154,7 +154,17 @@
 }
 
 .sendMsgBtn{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 7px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
   height: 7vh;
+  width: 10%;
+}
+
+.Chat-TextArea{
+  width: 100%;
 }
 
 @media screen and (max-width: 768px) {
@@ -256,5 +266,12 @@
   .chat-footer{
     margin-right: 3%;
     margin-left: 1%;
+  }
+  .sendMsgBtn{
+    height: 9vh; 
+    width: 20%;
+  }
+  .Chat-TextArea{
+    width: 80%;
   }
 }

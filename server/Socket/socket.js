@@ -13,6 +13,7 @@ const io = new Server(server, {
 })
 
 export const getReceiverSocketId = (receiverId) => {
+  // as it just checking if the receiver is online (because it'll only get executed when userSocketMap variable is there which'll be there only when user is connected)
   return userSocketMap[receiverId]
 }
 
