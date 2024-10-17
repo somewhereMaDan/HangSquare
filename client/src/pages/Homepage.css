@@ -1,0 +1,123 @@
+.HomePage {
+  display: flex;
+  justify-content: center;
+  margin-top: 2%;
+  margin-left: 2%;
+  margin-right: 2%;
+}
+.Feed-Section {
+  margin-left: 2%;
+  margin-right: 2%;
+  display: flex;
+  flex-direction: column;
+}
+
+.Feed-Post-Section {
+  /* margin-left: 2vw; */
+  margin-bottom: 2%;
+  width: 100%;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  border-radius: 13px;
+  padding: 2vh 2vw;
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.post-description {
+  width: 40%;
+}
+
+.avatar-icon {
+  margin-right: 2%;
+}
+
+.post-pic-path {
+  margin-left: 2%;
+}
+
+.post-submit-btn {
+  margin-left: 2%;
+}
+
+.ad-site {
+  font-size: 14px;
+}
+
+.ad-info {
+  margin-top: 3%;
+  font-size: 15px;
+}
+
+@media screen and (max-width: 768px) {
+  /* .UserProfile {
+    display: none;
+  } */
+  .Advertisment {
+    display: none;
+  }
+  .HomePage {
+    display: flex;
+    justify-content: center;
+    margin-top: 2%;
+    margin-left: 2%;
+    margin-right: 2%;
+  }
+  .Feed-Section {
+    margin-left: 2%;
+    margin-right: 2%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .Feed-Post-Section {
+    /* margin-left: 2vw; */
+    margin-bottom: 2%;
+    width: 100%;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    border-radius: 13px;
+    /* padding: 2vh 2vw; */
+  }
+  .avatar {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .post-description {
+    width: 70%;
+  }
+
+  .avatar-icon,
+  .post-submit-btn,
+  .post-pic-path {
+    margin: 0;
+  }
+
+  .first-line {
+    width: 50%;
+  }
+
+  /* .whole-adv-page { */
+  /* opacity: 0; */
+  /* display: none; */
+  /* position: absolute;
+    left: -9999px; */
+  /* } */
+
+  .lakme-headers {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .create-ad {
+    font-size: 0px;
+  }
+  .profile-nav {
+    font-size: 10px;
+  }
+  .logout-nav {
+    font-size: 10px;
+  }
+}

@@ -1,0 +1,188 @@
+.whole-profile-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 40vh;
+  width: 20vw;
+}
+.profile-first-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* width: 80%; */
+  /* width: 20vw; */
+}
+
+.profile-information,
+.friend-list {
+  padding: 2vh 2vw;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  border-radius: 13px;
+}
+
+.profile-information {
+  margin-bottom: 2vh;
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.avatar-username {
+  display: flex;
+}
+
+.user-name-friends {
+  padding-left: 1vw;
+}
+
+/* .button-1{
+  margin-left: 10%;
+  padding: 5px 8px 5px;
+  width: 7vw;
+  font-size: 11px;
+  font-weight: 200;
+  letter-spacing: 1px;
+  outline: 0;
+  border: 1px solid black;
+  color: black;
+  cursor: pointer;
+  position: relative;
+  background-color: rgba(0, 0, 0, 0);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.responsive-btn:hover {
+  background-color: #add8e6;
+} */
+
+.responsive-btn {
+  padding: 8px 15px;
+  font-size: 18px;
+  background-color: rgb(71, 204, 204);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-bottom: 8px;
+  margin-top: 6px;
+}
+
+/* Hover effect */
+.responsive-btn:hover {
+  background-color: rgb(84, 84, 209);
+  transform: scale(1.05);
+}
+
+/* Responsive design: smaller screens */
+@media screen and (max-width: 768px) {
+  .HomePage{
+    display: flex;
+    flex-direction: column;
+  }
+  .whole-profile-info{
+    display: flex;
+    height: 100%;
+    width: 96%;
+    margin-left: 2%;
+    margin-right: 2%;
+    margin-bottom: 5%;
+  }
+  .responsive-btn,
+  .logout-btn {
+    font-size: 18px;
+    padding: 6px 12px;
+    margin-bottom: 6px;
+  }
+}
+
+/* Even smaller screens like mobile */
+@media screen and (max-width: 480px) {
+  .HomePage{
+    display: flex;
+    flex-direction: column;
+  }
+  .whole-profile-info{
+    display: flex;
+    height: 100%;
+    width: 96%;
+    margin-bottom: 5%;
+    margin-left: 2%;
+    margin-right: 2%;
+  }
+  .responsive-btn {
+    font-size: 14px;
+    padding: 10px 20px;
+    width: 100%;
+    margin-bottom: 6px;
+  }
+  .logout-btn {
+    font-size: 14px;
+    padding: 10px 20px;
+    width: 100%;
+    margin-bottom: 6px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .HomePage{
+    display: flex;
+    flex-direction: column;
+  }
+  .whole-profile-info{
+    display: flex;
+    height: 100%;
+    width: 96%;
+    margin-left: 2%;
+    margin-right: 2%;
+    margin-bottom: 5%;
+  }
+  .profile-nav {
+    font-size: 10px;
+  }
+  .logout-nav {
+    font-size: 10px;
+  }
+}
+
+.logout-btn {
+  padding: 8px 15px;
+  font-size: 18px;
+  background-color: rgb(200, 98, 98);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-bottom: 8px;
+  margin-top: 6px;
+}
+
+/* Hover effect */
+.logout-btn:hover {
+  background-color: rgb(255, 0, 0);
+  transform: scale(1.05);
+}
+
+.delete-btn {
+  padding: 8px 15px;
+  font-size: 18px;
+  background-color: rgb(87, 13, 100);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-bottom: 8px;
+  margin-top: 6px;
+}
+
+/* Hover effect */
+.delete-btn:hover {
+  background-color: rgb(164, 33, 33);
+  transform: scale(1.05);
+}

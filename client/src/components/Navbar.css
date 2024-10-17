@@ -1,0 +1,47 @@
+/* CSS */
+/* .button-1{
+  margin: 10px 16px 10px;
+  padding: 5px 8px 5px;
+  width: 7vw;
+  font-size: 16px;
+  font-weight: 200;
+  letter-spacing: 1px;
+  outline: 0;
+  border: 1px solid black;
+  color: black;
+  cursor: pointer;
+  position: relative;
+  background-color: rgba(0, 0, 0, 0);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.responsive-btn:hover {
+  background-color: #FF5B61;
+} */
+
+.navbar-main{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 1%;
+  padding-right: 1%;
+  background-color: white;
+}
+
+.profile-nav, .logout-nav{
+  font-size: 18px;
+}
+
+@media screen and (max-width: 600px) {
+  .responsive-btn{
+    margin-left: 0;
+  }
+  .profile-nav{
+    font-size: 10px;
+  }
+  .logout-nav{
+    font-size: 10px;
+  }
+}
