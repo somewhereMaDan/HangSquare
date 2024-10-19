@@ -119,14 +119,14 @@ function Content() {
       console.log("UserId is not available yet, waiting...");
     }
 
-    if (LoggedUserId) {
-      const socket = io(`${import.meta.env.VITE_API_URL}`, {
-        transports: ['websocket'], // Ensure websocket transport is enabled
-        query: {
-          userId: LoggedUserId
-        }
-      })
-    }
+    // if (LoggedUserId) {
+    //   const socket = io(`${import.meta.env.VITE_API_URL}`, {
+    //     transports: ['websocket'], // Ensure websocket transport is enabled
+    //     query: {
+    //       userId: LoggedUserId
+    //     }
+    //   })
+    // }
 
     if (redirectUserId !== null) {
       GetUserPosts();
