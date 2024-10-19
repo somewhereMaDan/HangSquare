@@ -103,13 +103,16 @@ function Login() {
     alert("Work in Progress...")
   }
 
-  if(loading){
-    console.log("loading state of login.jsx");
-    <div className="loader"></div>
-  }
-
   return (
     <div className="LoginPage">
+      {loading && (
+        <div className="loading-overlay">
+          <div className="loader"></div>
+          <div style={{marginTop: '2vh'}}>
+            <b style={{ color: 'cyan' }}>WAITING FOR SERVER ...</b>
+          </div>
+        </div>
+      )}
       <div className={`container ${rightPanelActive ? "right-panel-active" : ""}`}>
         {/* Sign-Up Container */}
         <div className="form-container sign-up-container">

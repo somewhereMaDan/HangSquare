@@ -199,14 +199,32 @@ input {
   }
 }
 
-/* HTML: <div class="loader"></div> */
+/* Semi-transparent dark overlay for the loading screen */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* background-color: rgba(0, 0, 0, 0.6);  */
+  background-color: rgba(0, 0, 0, 0.9); /* Less transparent background */
+  z-index: 1000; /* Ensure it's on top of other elements */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .loader {
   width: 50px;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: repeating-conic-gradient(#000 0 90deg,#ccc 0 180deg);
+  background: repeating-conic-gradient(#000 0 90deg, #ccc 0 180deg);
   animation: l21 1s infinite linear;
 }
+
 @keyframes l21 {
-  100% {transform: rotate(.5turn)}
+  100% {
+    transform: rotate(.5turn);
+  }
 }
