@@ -56,7 +56,7 @@ export const Navbar = () => {
           </div>
           <Link to="/ChatSection" className="nav__link" onClick={closeMenu}>
             <button className='responsive-btn'>
-              <span className='profile-nav'>Chat App</span>
+              <span className='profile-nav'>Messages</span>
             </button>
           </Link>
           <Link to="/" className="nav__link" onClick={closeMenu}>
