@@ -9,6 +9,7 @@ import { ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { toast } from 'sonner'
+import { useSocketContext } from '../Contexts/SocketContext'
 
 
 
@@ -16,10 +17,14 @@ function ChatWindow({ FriendId }) {
   const [MsgText, setMsgText] = useState('')
   const [MessageList, setMessageList] = useState([])
   const LoggedUserId = userGetId()
-  const [OnlineUsers, setOnlineUsers] = useState([])
+  // const [OnlineUsers, setOnlineUsers] = useState([])
+  const { OnlineUsers, socket } = useSocketContext()
+
+  console.log('Online Users: ', OnlineUsers);
+
 
   const SendMessage = async () => {
-    if(MsgText.trim() === ''){
+    if (MsgText.trim() === '') {
       toast.info('Please enter a message!')
       return
     }
@@ -59,39 +64,15 @@ function ChatWindow({ FriendId }) {
       setMessageList([])
       GetMessages()
     }
-    if (LoggedUserId) {
-      const socket = io(`${import.meta.env.VITE_API_URL}`, {
-        transports: ['websocket'], // Ensure websocket transport is enabled
-        query: {
-          userId: LoggedUserId
-        }
-      })
-      if (socket) {
-        socket.on('newMessage', (newMessage) => {
-          if (newMessage.senderId === FriendId && newMessage.receiverId === LoggedUserId) {
-            setMessageList((prev) => [...prev, newMessage])
-          }
-        })
+    socket?.on('newMessage', (newMessage) => {
+      if (newMessage.senderId === FriendId && newMessage.receiverId === LoggedUserId) {
+        setMessageList((prev) => [...prev, newMessage])
       }
-      socket.on('GetOnlineUsers', (users) => {
-        setOnlineUsers(users)
-      })
-      return () => {
-        socket.close()
-      }
-    } else {
-      if (socket) {
-        socket.close()
-        setSocket(null)
-      }
-    }
-
-    // Clean up the listener when the component unmounts or FriendId changes
+    })
     return () => {
       if (socket) {
         socket.off('newMessage')
       }
-      setOnlineUsers(null)
     }
   }, [FriendId])
 
@@ -105,7 +86,7 @@ function ChatWindow({ FriendId }) {
             }
             <p>Live Chat</p>
           </div>
-          <div className='chat-body'>
+          <div className='chat-body' style={{ minHeight: '51vh' }}>
             {MessageList.length !== 0 ? MessageList.map((messageContent) => {
               return (
                 <div
@@ -124,7 +105,11 @@ function ChatWindow({ FriendId }) {
                   </div>
                 </div>
               );
-            }) : (<div>No Conversation yet..</div>)}
+            }) : (<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
+              <div style={{ marginTop: '5vh' }}>
+                No Conversation yet..
+              </div>
+            </div>)}
           </div>
         </div>
         <div className='SecondHalf-chat-window'>
@@ -134,7 +119,7 @@ function ChatWindow({ FriendId }) {
               <Textarea style={{ height: '1vh' }} onChange={(e) => setMsgText(e.target.value)} value={MsgText} placeholder="Send a message" />
             </div>
             {/* <button >Send</button> */}
-            <button className='sendMsgBtn' style={{ marginLeft: '1%'}} onClick={SendMessage} variant="outline" size="icon">
+            <button className='sendMsgBtn' style={{ marginLeft: '1%' }} onClick={SendMessage} variant="outline" size="icon">
               <ChevronRight className="h-4 w-4" />
             </button>
           </div>

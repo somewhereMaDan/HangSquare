@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext } from 'react'
+import { useState, useEffect, createContext, useContext } from 'react'
 import './App.css'
 import Login from './pages/Login'
 import { Toaster } from "sonner";
@@ -12,6 +12,7 @@ import { TempContext } from './Contexts/TempContext'
 import axios from 'axios';
 import io from 'socket.io-client'
 import ChatSection from './pages/ChatSection';
+import { SocketContextProvider } from './Contexts/SocketContext';
 
 function App() {
   return (
@@ -35,23 +36,10 @@ function Content() {
   const [UserFriends, setUserFriends] = useState([])
   const [UserFriendsId, setUserFriendsId] = useState([])
   const [isLoading, setIsLoading] = useState(true);
-  const [Socket, setSocket] = useState(null)
   let UserId = userGetId()
-  const LoggedUserId = userGetId()
 
-  // let ProfileInfo
-  // if (redirectUserId) {
-  //   ProfileInfo = async () => {
-  //     try {
-  //       const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/${redirectUserId}`,
-  //         { headers: { authorization: cookies.access_Token } }
-  //       )
-  //       setUserInfo([response.data.UserInfo])
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
-  // } else {
+
+
   const ProfileInfo = async () => {
     setIsLoading(true);
     if (redirectUserId) {
@@ -119,15 +107,6 @@ function Content() {
       console.log("UserId is not available yet, waiting...");
     }
 
-    // if (LoggedUserId) {
-    //   const socket = io(`${import.meta.env.VITE_API_URL}`, {
-    //     transports: ['websocket'], // Ensure websocket transport is enabled
-    //     query: {
-    //       userId: LoggedUserId
-    //     }
-    //   })
-    // }
-
     if (redirectUserId !== null) {
       GetUserPosts();
     } else {
@@ -137,16 +116,18 @@ function Content() {
 
 
   return (
-    <TempContext.Provider value={{ redirectUserId, setRedirectUserId, PostsData, setPostsData, UserInfo, setUserInfo, UserFriends, setUserFriends, UserFriendsId, setUserFriendsId, }}>
-      {location.pathname !== '/' && <Navbar />} {/* Conditionally render Navbar */}
-      <Routes>
-        <Route path='/' element={<Login />} />
-        {/* {cookies.access_Token ? <Route path='/home' element={<Homepage />} /> : <Route path='/' element={<Login />} />} */}
-        {cookies.access_Token && <Route path='/home' element={<Homepage />} />}
-        <Route path='/redirectProfile' element={<RedirectProfile />} />
-        <Route path='/ChatSection' element={<ChatSection />} />
-      </Routes>
-    </TempContext.Provider>
+    <SocketContextProvider>
+      <TempContext.Provider value={{ redirectUserId, setRedirectUserId, PostsData, setPostsData, UserInfo, setUserInfo, UserFriends, setUserFriends, UserFriendsId, setUserFriendsId, }}>
+        {location.pathname !== '/' && <Navbar />} {/* Conditionally render Navbar */}
+        <Routes>
+          <Route path='/' element={<Login />} />
+          {/* {cookies.access_Token ? <Route path='/home' element={<Homepage />} /> : <Route path='/' element={<Login />} />} */}
+          {cookies.access_Token && <Route path='/home' element={<Homepage />} />}
+          <Route path='/redirectProfile' element={<RedirectProfile />} />
+          <Route path='/ChatSection' element={<ChatSection />} />
+        </Routes>
+      </TempContext.Provider>
+    </SocketContextProvider>
   )
 }
 

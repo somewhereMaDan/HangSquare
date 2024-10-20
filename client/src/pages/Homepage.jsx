@@ -8,10 +8,13 @@ import { useCookies } from 'react-cookie'
 import axios from 'axios'
 import { userGetId } from '@/hooks/userGetId'
 import Profile from '@/components/Profile'
+import { useSocketContext } from '@/Contexts/SocketContext'
 
 
 export const GlobalContext = createContext();
 function Homepage() {
+  const { OnlineUsers, socket } = useSocketContext()
+  console.log('App.jsx: ', OnlineUsers);
   return (
       <div className='HomePage'>
         <div className='UserProfile'>
