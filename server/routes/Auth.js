@@ -38,22 +38,26 @@ router.post("/register", async (req, res) => {
 })
 
 router.post("/login", async (req, res) => {
-  const { email, Password } = req.body;
-  const user = await UserModel.findOne({ email: email })
+  try {
+    const { email, Password } = req.body;
+    const user = await UserModel.findOne({ email: email })
 
-  if (!user) {
-    return res.status(401).json({ error: "user does not exist" })
+    if (!user) {
+      return res.status(401).json({ error: "user does not exist" })
+    }
+
+    const isMatch = await bcrypt.compare(Password, user.Password)
+
+    if (!isMatch) {
+      return res.status(401).json({ error: "incorrect credentials" })
+    }
+
+    const token = jwt.sign({ UserId: user.id }, process.env.SECRET_KEY);
+
+    res.status(200).json({ message: "Login Successfull", token: token, UserId: user.id })
+  } catch (err) {
+    return res.status(403).json({ error: err.message })
   }
-
-  const isMatch = await bcrypt.compare(Password, user.Password)
-
-  if (!isMatch) {
-    return res.status(401).json({ error: "incorrect credentials" })
-  }
-
-  const token = jwt.sign({ UserId: user.id }, process.env.SECRET_KEY);
-
-  res.status(200).json({ message: "Login Successfull", token: token, UserId: user.id })
 })
 
 

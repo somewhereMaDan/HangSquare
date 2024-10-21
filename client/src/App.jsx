@@ -13,6 +13,7 @@ import axios from 'axios';
 import io from 'socket.io-client'
 import ChatSection from './pages/ChatSection';
 import { SocketContextProvider } from './Contexts/SocketContext';
+import PassReset from './pages/PassReset';
 
 function App() {
   return (
@@ -125,6 +126,7 @@ function Content() {
           {cookies.access_Token && <Route path='/home' element={<Homepage />} />}
           <Route path='/redirectProfile' element={<RedirectProfile />} />
           <Route path='/ChatSection' element={<ChatSection />} />
+          <Route path='/reset-link-to-change-password/:token' element={<PassReset />} />
         </Routes>
       </TempContext.Provider>
     </SocketContextProvider>

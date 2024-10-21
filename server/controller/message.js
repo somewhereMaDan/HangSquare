@@ -51,8 +51,9 @@ export const sendMessage = async (req, res) => {
 
   await Promise.all([conversation.save(), newMessage.save()])
 
+  // This only works when other user is online, (like for checking OnlineUsers are online or the user we want to sendMessage is online)
   const ReceivedSocketId = getReceiverSocketId(receiverId)
-  console.log('ReceivedSocketId: ', ReceivedSocketId);
+  // console.log('ReceivedSocketId: ', ReceivedSocketId);
 
   if (ReceivedSocketId) {
     io.to(ReceivedSocketId).emit('newMessage', newMessage)

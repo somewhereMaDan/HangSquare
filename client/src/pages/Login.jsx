@@ -7,11 +7,14 @@ import { useNavigate } from 'react-router-dom'
 import { Input } from "@/components/ui/input"
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { ImgDb } from '../Firebase'
+import ForgotPasswordDialog from "@/components/ForgotPasswordDialog";
+import showPasswordImg from '../assets/showPassword.png'
 
 function Login() {
   const navigate = useNavigate();
   const [rightPanelActive, setRightPanelActive] = useState(false);
   const [loading, setLoading] = useState(false); // New loading state
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
   const handleSignUpClick = () => {
     setRightPanelActive(true); // Show sign-up form
@@ -24,17 +27,25 @@ function Login() {
   const [FirstName, setFirstName] = useState('')
   const [LastName, setLastName] = useState('')
   const [ProfilePicture, setProfilePicture] = useState('')
-  // const [Bio, setBio] = useState('')
-  // const [Occupation, setOccupation] = useState('')
-  // const [Location, setLocation] = useState('')
   const [Email, setEmail] = useState('')
   const [Password, setPassword] = useState('')
   const [_, setCookie] = useCookies(["access_Token"]);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = (e) => {
+    e.preventDefault()
+    setShowPassword(prevState => !prevState);
+  };
 
   const OnRegister = async (e) => {
     e.preventDefault();
-    setLoading(true)
+    const isPasswordValid = passwordRegex.test(Password); // Direct validation
+    if (isPasswordValid === false) {
+      toast.error("Password must be at least 8 characters long and include a combination of uppercase and lowercase letters, numbers, and symbols.");
+      return
+    }
     toast.info("Creating User, Please wait...")
+    setLoading(true)
     const ImgRef = ref(ImgDb, `ProfilePictures/${ProfilePicture.name}`)
     const snapshot = await uploadBytes(ImgRef, ProfilePicture);
     // Step 3: Get the download URL for the uploaded image
@@ -47,20 +58,11 @@ function Login() {
           lastName: LastName,
           email: Email,
           Password: Password,
-          // Bio: Bio,
           PicturePath: downloadURL,
-          // Friends: [],
-          // OwnPosts: [],
-          // Occupation: Occupation,
-          // Location: Location
         }
       );
       setFirstName("")
       setLastName("")
-      // setProfilePicture("")
-      // setOccupation("")
-      // setBio("")
-      // setLocation("")
       setEmail("")
       setPassword("")
       toast.success(response.data.message)
@@ -108,7 +110,7 @@ function Login() {
       {loading && (
         <div className="loading-overlay">
           <div className="loader"></div>
-          <div style={{marginTop: '2vh'}}>
+          <div style={{ marginTop: '2vh' }}>
             <b style={{ color: 'cyan' }}>WAITING FOR SERVER ...</b>
           </div>
         </div>
@@ -122,7 +124,12 @@ function Login() {
             <input type="text" placeholder="Last Name" value={LastName} onChange={(e) => setLastName(e.target.value)} required />
             <Input onChange={(e) => setProfilePicture(e.target.files[0])} id="picture" type="file" required />
             <input type="email" placeholder="Email" value={Email} onChange={(e) => setEmail(e.target.value)} required />
-            <input type="password" placeholder="Password" value={Password} onChange={(e) => setPassword(e.target.value)} required />
+
+            <input type={showPassword ? 'text' : 'password'} placeholder="Password" value={Password} onChange={(e) => setPassword(e.target.value)} required />
+            <button onClick={togglePasswordVisibility}>
+            {showPassword ? <img src={showPasswordImg} /> : <img src={showPasswordImg} />}
+            </button>
+
             <button className="Login-Page-btn" type="submit" disabled={loading}>{loading ? "Registering User..." : "Register"}</button>
             <button style={{ position: "absolute", bottom: "7px", width: "60%" }} type="button" className="ghost" onClick={handleSignInClick}>Go Back</button>
           </form>
@@ -133,8 +140,13 @@ function Login() {
           <form onSubmit={OnLogin}>
             <h2 className="Register-Title" style={{ paddingBottom: "10%" }}>HangSquare</h2>
             <input type="email" value={Email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required />
-            <input type="password" value={Password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" required />
-            <a style={{ cursor: 'pointer' }} onClick={wip}>Forgot your password?</a>
+
+            <input type={showPassword ? 'text' : 'password'} value={Password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" required />
+            <button onClick={togglePasswordVisibility}>
+              {showPassword ? <img src={showPasswordImg} /> : <img src={showPasswordImg} />}
+            </button>
+
+            <ForgotPasswordDialog />
             <button className="Login-Page-btn" type="submit" disabled={loading}>{loading ? "Signing In..." : "Sign In"}</button>
             <button style={{ position: "absolute", bottom: "30px" }} type="button" className="ghost" onClick={handleSignUpClick}>Register</button>
           </form>
