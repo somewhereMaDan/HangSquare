@@ -17,11 +17,7 @@ function ChatWindow({ FriendId }) {
   const [MsgText, setMsgText] = useState('')
   const [MessageList, setMessageList] = useState([])
   const LoggedUserId = userGetId()
-  // const [OnlineUsers, setOnlineUsers] = useState([])
   const { OnlineUsers, socket } = useSocketContext()
-
-  console.log('Online Users: ', OnlineUsers);
-
 
   const SendMessage = async () => {
     if (MsgText.trim() === '') {

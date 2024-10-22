@@ -14,7 +14,6 @@ import { useSocketContext } from '@/Contexts/SocketContext'
 export const GlobalContext = createContext();
 function Homepage() {
   const { OnlineUsers, socket } = useSocketContext()
-  console.log('App.jsx: ', OnlineUsers);
   return (
       <div className='HomePage'>
         <div className='UserProfile'>

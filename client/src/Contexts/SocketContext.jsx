@@ -16,7 +16,6 @@ export const SocketContextProvider = ({ children }) => {
   const [OnlineUsers, setOnlineUsers] = useState([])
 
   useEffect(() => {
-    console.log("useEffect triggered with LoggedUserId:", LoggedUserId);
     if (LoggedUserId) {
       const newSocket = io(`${import.meta.env.VITE_API_URL}`, {
         query: {
