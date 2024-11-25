@@ -1,5 +1,5 @@
 import express from "express";
-import { AddComment, AddRemoveLikes, CreatePost, DeleteComment, DeletePost, GetAllPosts, GetUserPosts } from "../controller/posts.js";
+import { AddComment, AddRemoveLikes, CreatePost, DeleteComment, DeletePost, EditPost, GetAllPosts, GetUserPosts } from "../controller/posts.js";
 import { VerifyToken } from "../middleware/VerifyToken.js";
 import { version } from "mongoose";
 
@@ -12,6 +12,8 @@ router.get("/:UserId", VerifyToken, GetUserPosts)
 router.post("/createPost/:UserId", VerifyToken, CreatePost)
 
 router.patch("/deletePost/:PostId", VerifyToken, DeletePost)
+
+router.patch("/editPost/:PostId", EditPost)
 
 router.patch("/:UserId/UpdateLike/:PostId", AddRemoveLikes)
 

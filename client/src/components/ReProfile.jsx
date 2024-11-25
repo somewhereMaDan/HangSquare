@@ -73,8 +73,9 @@ function ReProfile() {
     }
   }
 
-  const toggleRedirect = async (RedirectUserId) => {
-    navigate('/redirectProfile');
+  const toggleRedirect = async (redirectUserId) => {
+    // navigate('/redirectProfile');
+    navigate(`/redirectProfile?redirectId=${redirectUserId}`);
   }
 
   useEffect(() => {

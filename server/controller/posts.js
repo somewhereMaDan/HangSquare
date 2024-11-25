@@ -87,6 +87,36 @@ export const DeletePost = async (req, res) => {
   }
 }
 
+export const EditPost = async (req, res) => {
+  const { PostId } = req.params;
+  const { OwnerId, NewDescription, NewPicturePath } = req.body;
+
+
+  try {
+    if (!PostId || !NewDescription || !NewPicturePath) {
+      return res.status(400).json({ message: 'PostId, Description, and PicturePath are required' });
+    }
+
+    const user = await UserModel.findById(OwnerId)
+
+    if (!user.OwnPosts.includes(PostId)) {
+      return res.status(401).json({ message: "You're not authorized to edit this post", ans: user.OwnPosts.includes(PostId) })
+    }
+    const post = await PostModel.findByIdAndUpdate(PostId, {
+      Description: NewDescription,
+      PicturePath: NewPicturePath
+    }, { new: true }).populate('Owner')
+
+    if (!post) {
+      return res.status(400).json({ message: 'Unable to find post' })
+    }
+
+    return res.status(200).json({ message: 'Post Edited Successfully', UpdatedPost: post })
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 export const AddRemoveLikes = async (req, res) => {
   try {
     const { UserId, PostId } = req.params

@@ -35,7 +35,8 @@ export const Navbar = () => {
   useEffect(() => {
     if (redirectUserId) {
       // Navigate to the profile page when redirectUserId is set
-      navigate('/redirectProfile');
+      // navigate('/redirectProfile');
+      navigate(`/redirectProfile?redirectId=${redirectUserId}`);
     }
   }, [redirectUserId]); // Trigger when redirectUserId is updated
 

@@ -61,3 +61,40 @@ export const sendMessage = async (req, res) => {
 
   return res.status(200).json({ newMessage: newMessage })
 }
+
+export const deleteMessage = async (req, res) => {
+  const { id: MsgId } = req.params;
+  const { senderId, receiverId } = req.body;
+
+  // Check if message exists before attempting deletion
+  const message = await MessageModal.findById(MsgId);
+  if (!message) {
+    return res.status(404).json({ message: "Message not found" });
+  }
+
+  // Delete the message
+  await MessageModal.findByIdAndDelete(MsgId);
+
+  // Update the conversation to remove the message ID from messages array
+  const conversation = await ConversationModal.findOneAndUpdate(
+    { participants: { $all: [senderId, receiverId] } },
+    { $pull: { messages: MsgId } }, // note: `messages` field
+    { new: true }
+  ).populate('messages');
+
+  if (!conversation) {
+    return res.status(404).json({ message: "Conversation not found" });
+  }
+
+  const ReceivedSocketId = getReceiverSocketId(receiverId)
+
+  if (ReceivedSocketId) {
+    console.log("Emitting messages:", conversation.messages);  // Log emitted message
+    io.to(ReceivedSocketId).emit('UpdatedMessages', conversation.messages);
+  }
+
+  res.status(200).json({
+    message: 'Chat deleted successfully',
+    UpdatedMsg: conversation.messages,
+  });
+};

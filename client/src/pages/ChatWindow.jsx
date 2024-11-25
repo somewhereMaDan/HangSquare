@@ -10,12 +10,15 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { toast } from 'sonner'
 import { useSocketContext } from '../Contexts/SocketContext'
+import ChatWindowMsgOption from '@/components/ChatWindowMsgOption'
+import { useMessage } from '@/Contexts/MessageContext'
 
 
 
-function ChatWindow({ FriendId }) {
+export default function ChatWindow({ FriendId }) {
   const [MsgText, setMsgText] = useState('')
-  const [MessageList, setMessageList] = useState([])
+  // const [MessageList, setMessageList] = useState([])
+  const { MessageList, setMessageList } = useMessage()
   const LoggedUserId = userGetId()
   const { OnlineUsers, socket } = useSocketContext()
 
@@ -83,7 +86,7 @@ function ChatWindow({ FriendId }) {
             <p>Live Chat</p>
           </div>
           <div className='chat-body' style={{ minHeight: '51vh' }}>
-            {MessageList.length !== 0 ? MessageList.map((messageContent) => {
+            {MessageList.length !== 0 ? MessageList?.map((messageContent) => {
               return (
                 <div
                   className="message"
@@ -91,6 +94,13 @@ function ChatWindow({ FriendId }) {
                   key={messageContent._id}
                 >
                   <div>
+                    <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
+                      <div style={{ marginRight: '2%' }}>
+                        {
+                          LoggedUserId === messageContent.senderId && <ChatWindowMsgOption senderId={messageContent.senderId} receiverId={messageContent.receiverId} msgId={messageContent._id} />
+                        }
+                      </div>
+                    </div>
                     <div className="message-content">
                       <p>{messageContent.message}</p>
                     </div>
@@ -125,4 +135,4 @@ function ChatWindow({ FriendId }) {
   )
 }
 
-export default ChatWindow
+// export default ChatWindow

@@ -73,7 +73,8 @@ export default function Profile() {
   useEffect(() => {
     if (redirectUserId) {
       // Once redirectUserId is set, navigate to the redirectProfile page
-      navigate('/redirectProfile', { state: { RedirectId: redirectUserId } });
+      // navigate('/redirectProfile', { state: { RedirectId: redirectUserId } });
+      navigate(`/redirectProfile?redirectId=${redirectUserId}`);
     }
   }, [redirectUserId]); // Trigger this effect whenever redirectUserId changes
 

@@ -20,7 +20,10 @@ import DeleteCommentPic from '../assets/delete.png'
 import { useNavigate } from 'react-router-dom'
 import { useCookies } from 'react-cookie';
 import { TempContext } from '../Contexts/TempContext'
-import { v4 as uuidv4 } from 'uuid';
+import editImg from '../assets/editIcon.png'
+import { Button } from './ui/button'
+import { EditPostDialog } from './EditPost'
+// import { EditPostDialog } from './EditPost'
 
 function Feed() {
   let UserId = userGetId();
@@ -28,7 +31,6 @@ function Feed() {
   const { PostsData, setPostsData, UserInfo, setUserInfo, UserFriends, setUserFriends, UserFriendsId, setUserFriendsId, redirectUserId, setRedirectUserId } = useContext(TempContext)
   const navigate = useNavigate()
   const [cookies, setCookie] = useCookies(["access_Token"]);
-
   if (redirectUserId !== null) {
     UserId = redirectUserId
   }
@@ -48,8 +50,6 @@ function Feed() {
         updatedUserFriends = UserFriends; // No change needed if already present
       }
       updatedFriendList = [...UserFriendsId, PostOwnerId];
-      // updatedUserFriends = [...UserFriends, Owner]
-      // updatedFriendList = [...UserFriendsId, PostOwnerId];
     }
 
     setUserFriendsId(updatedFriendList)
@@ -60,11 +60,6 @@ function Feed() {
         { headers: { authorization: cookies.access_Token } }
       )
       toast.success(response.data.message)
-      // const updatedUser = response.data.SingleUser
-      // const updatedUsers = UserInfo.filter((user) => {
-      //   return user._id !== PostOwnerId ? updatedUser : user
-      // })
-      // setUserInfo(updatedUsers)
     } catch (err) {
       console.log(err);
     }
@@ -75,21 +70,6 @@ function Feed() {
       console.error("PostId is undefined or invalid");
       return;
     }
-    // const updatedPosts = PostsData.map((post) => {
-    //   if (post) {
-    //     if (post._id === PostId) {
-    //       if (post.Likes) {
-    //         const UpdatedLikes = { ...post.Likes, [UserId]: !post?.Likes[UserId] }
-    //         return { ...post, Likes: UpdatedLikes }
-    //       }
-    //     }
-    //   }
-    //   return post
-    // })
-    // setPostsData(updatedPosts)
-
-    // this above approch maintains Immutability and avoid Direct Mutation - Preferable when using state management libraries that require state to be immutable, as it helps prevent unintended side effects and makes debugging easier.
-
     try {
       const response = await axios.patch(`${import.meta.env.VITE_API_URL}/posts/${UserId}/UpdateLike/${PostId}`,
         { headers: { authorization: cookies.access_Token } }
@@ -107,17 +87,6 @@ function Feed() {
   }
 
   const DeleteComment = async (PostId, commentId) => {
-    // const updatedPosts = PostsData?.map((post) => {
-    //   if (post._id === PostId) {
-    //     const CommentMap = { ...post.Comments }
-    //     if (CommentMap[commentId]) {
-    //       delete CommentMap[commentId]
-    //     }
-    //     return { ...post, Comments: CommentMap }
-    //   }
-    //   return post
-    // })
-    // setPostsData(updatedPosts)
     console.log("PostsData after update: ", PostsData);
     try {
       const response = await axios.patch(`${import.meta.env.VITE_API_URL}/posts/${UserId}/DeleteComment/${PostId}`, {
@@ -135,7 +104,6 @@ function Feed() {
   }
 
   const DeletePost = async (PostId) => {
-    console.log("Delte?");
     try {
       const response = await axios.patch(`${import.meta.env.VITE_API_URL}/posts/deletePost/${PostId}`, {
         UserId: LoggedUserId
@@ -153,16 +121,15 @@ function Feed() {
   }
 
   const toggleRedirect = async (ToRedirectUserId) => {
-    navigate('/redirectProfile', { state: { RedirectId: ToRedirectUserId } });
-    // console.log("redirect user id from feed.jsx : ", ToRedirectUserId);
+    // navigate('/redirectProfile', { state: { RedirectId: ToRedirectUserId } });
+    navigate(`/redirectProfile?redirectId=${redirectUserId}`);
     setRedirectUserId(ToRedirectUserId)
-
   }
   return (
     <div className='whole-feed-div'>
       {
         (!PostsData || PostsData.length === 0) ? (
-          <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}} className='post-div'>No posts yet</div>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} className='post-div'>No posts yet</div>
         ) : (
           PostsData && PostsData?.map((post, index) => {
             return (
@@ -187,17 +154,17 @@ function Feed() {
                   <div>
                     {
                       LoggedUserId === post.Owner._id &&
-                      <div>
-                        <button className='delete-btn' onClick={() => DeletePost(post._id)}>Delete</button>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <div style={{ paddingRight: '2vw' }}>
+                          <EditPostDialog OwnerId={post.Owner._id} PostId={post._id} />
+                        </div>
+                        <div>
+                          <button className='delete-btn' onClick={() => DeletePost(post._id)}>Delete</button>
+                        </div>
                       </div>
                     }
-                    {/* {console.log("User Friends: " + UserFriendsId + " post owner is: " + post.Owner._id)} */}
                     {
                       post.Owner._id !== UserId && <button onClick={() => RemoveAddFriend(post.Owner._id, post.Owner)}>
-                        {/* {
-                      post.Owner.Friends.includes(LoggedUserId) ? <img style={{ height: "2.5vh", borderRadius: "5px" }} src={RemoveFriend} alt='Remove' /> :
-                        post.Owner._id !== UserId && <img style={{ height: "2.5vh", borderRadius: "5px" }} src={AddFriendPic} alt='Remove'></img>
-                    } */}
                         {
                           UserFriendsId.includes(post.Owner._id) ? <img style={{ height: "2.5vh", borderRadius: "5px" }} src={RemoveFriend} alt='Remove' />
                             : <img style={{ height: "2.5vh", borderRadius: "5px" }} src={AddFriendPic} alt='Remove'></img>

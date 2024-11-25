@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/avatar"
 import { useSocketContext } from '@/Contexts/SocketContext'
 import OnlineIcon from '../assets/OnlineIcon.png'
+import { MessageProvider } from '../Contexts/MessageContext'
 
 function ChatSection({ socket }) {
   const { UserFriends, UserFriendsId } = useContext(TempContext)
@@ -73,7 +74,10 @@ function ChatSection({ socket }) {
             </div>
             <div className='chat-window-div'>
               {
-                FriendId ? <ChatWindow FriendId={FriendId}></ChatWindow> :
+                FriendId ?
+                  <MessageProvider>
+                    <ChatWindow FriendId={FriendId}></ChatWindow>
+                  </MessageProvider> :
                   <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
                     <div>Select a <b>Friend</b> from <b>Friend-List</b> to Chat with...</div>
                   </div>

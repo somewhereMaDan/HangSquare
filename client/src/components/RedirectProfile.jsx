@@ -2,7 +2,7 @@ import { React, useState, useEffect, createContext, useContext } from 'react'
 import Advertisment from './Advertisment'
 import Profile from './Profile'
 import UserFeed from './OwnFeed'
-import { useLocation } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { RedirectContext } from '../Contexts/RedirectContext'
 import { userGetId } from '@/hooks/userGetId';
 import { useCookies } from 'react-cookie'
@@ -13,8 +13,9 @@ import { TempContext } from '@/Contexts/TempContext';
 
 export const GlobalContext = createContext();
 function RedirectProfile() {
-  const location = useLocation();
-  const { redirectUserId } = useContext(TempContext)
+  // const { redirectUserId } = useContext(TempContext)
+  const [searchParams] = useSearchParams();
+  const redirectUserId = searchParams.get('redirectId');
   const [RePostsData, setRePostsData] = useState([])
   const [ReUserInfo, setReUserInfo] = useState([])
   const [cookies, setCookie] = useCookies(["access_Token"]);
