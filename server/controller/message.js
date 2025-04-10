@@ -89,7 +89,7 @@ export const deleteMessage = async (req, res) => {
   const ReceivedSocketId = getReceiverSocketId(receiverId)
 
   if (ReceivedSocketId) {
-    console.log("Emitting messages:", conversation.messages);  // Log emitted message
+    // console.log("Emitting messages:", conversation.messages);  // Log emitted message
     io.to(ReceivedSocketId).emit('UpdatedMessages', conversation.messages);
   }
 

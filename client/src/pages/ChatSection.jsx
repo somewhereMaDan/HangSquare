@@ -54,7 +54,7 @@ function ChatSection({ socket }) {
                           </div>
                           <div>
                             <div>{friend.firstName} {friend.lastName}</div>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-muted-foreground text-sm">
                               {friend.Bio}
                             </p>
                           </div>
@@ -89,7 +89,7 @@ function ChatSection({ socket }) {
             You have no Friends to Start a Conversation with!
           </div>
           <div>
-            Please Someone to have a Conversation...
+            Please Add someone in your Friend List to have a Conversation...
           </div>
         </div>
       }

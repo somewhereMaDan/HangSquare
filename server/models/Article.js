@@ -43,10 +43,7 @@ const ArticleSchema = new mongoose.Schema(
         CreatedAt: { type: Date, default: Date.now },
       },
     ],
-    Visiblity: {
-      type: [VisiblitySchema],
-      // default: undefined // will trigger controller's fallback if not sent
-    }
+    Visiblity: VisiblitySchema
   },
   { timestamps: true }
 );
