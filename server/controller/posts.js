@@ -16,7 +16,7 @@ export const GetUserPosts = async (req, res) => {
     const { UserId } = req.params
 
     const user = await UserModel.findById(UserId)
-    const Posts = user.OwnPosts
+    // const Posts = user.OwnPosts
 
     const UserPosts = await PostModel.find({ Owner: UserId }).populate('Owner')
 
