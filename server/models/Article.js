@@ -3,14 +3,16 @@ import mongoose, { Mongoose } from "mongoose";
 const VisiblitySchema = new mongoose.Schema({
   VisiblityType: {
     type: String,
-    enum: ['ALL', 'PRIVATE', 'FRIENDS', 'CUSTOM'],
-    default: 'ALL'
+    enum: ["ALL", "PRIVATE", "FRIENDS", "CUSTOM"],
+    default: "ALL",
   },
-  users: [{
-    type: String,
-    ref: 'users'
-  }]
-})
+  users: [
+    {
+      type: String,
+      ref: "users",
+    },
+  ],
+});
 
 const ArticleSchema = new mongoose.Schema(
   {
@@ -37,13 +39,14 @@ const ArticleSchema = new mongoose.Schema(
     },
     ArticleComments: [
       {
-        UserId: { type: String, required: true },
-        Username: { type: String, required: true },
+        CommentId: { type: mongoose.Schema.Types.ObjectId },
+        OwnerId: { type: String, required: true },
+        FirstName: { type: String, required: true },
         CommentText: { type: String, required: true },
         CreatedAt: { type: Date, default: Date.now },
       },
     ],
-    Visiblity: VisiblitySchema
+    Visiblity: VisiblitySchema,
   },
   { timestamps: true }
 );

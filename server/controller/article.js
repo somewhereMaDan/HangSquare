@@ -6,7 +6,7 @@ export const get_all_article = async (req, res) => {
     const articles = await ArticleModal.find({});
     return res
       .status(200)
-      .json({ message: "Articles Fetched", articles: articles });
+      .json({ message: "Articles Fetched", All_articles: articles });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal Server Error" });
@@ -66,13 +66,13 @@ export const create_article = async (req, res) => {
 
     return res
       .status(200)
-      .json({ message: "Article created successfully", article: article });
+      .json({ message: "Article created successfully", NewArticle: article });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
-// In frontend when Searching for user while granting visiblity, please user 'Get_all_user_info' so that
+// In frontend when Searching for user while granting visiblity, please use 'Get_all_user_info' so that
 // we can show all the users while selection
 export const updateVisiblity = async (req, res) => {
   try {
@@ -109,19 +109,87 @@ export const updateVisiblity = async (req, res) => {
       article.Visiblity.users = article.Owner;
     }
     await article.save();
-    return res.status(200).json({ message: "Visiblity Updated" });
+    return res
+      .status(200)
+      .json({ message: "Visiblity Updated", UpdatedArticle: article });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ message: "updateVisiblity Error" });
   }
 };
 
-export const requestVisiblity = async (req, res) => {
+// export const requestVisiblity = async (req, res) => {
+//   try {
+//     // We have to implement SSE Notification for this and we need frontend to do it
+//     const { reason, UserId, ArticleId } = req.body;
+//   } catch (error) {
+//     console.log(error);
+//     return res.status(500).json({ message: "requestVisiblity Error" });
+//   }
+// };
+
+export const updateLike = async (req, res) => {
   try {
-    // We have to implement SSE Notification for this and we need frontend to do it
-    const { reason, UserId, ArticleId } = req.body;
+    const { UserId, isLike, ArticleId } = req.body;
+    if (!UserId || !isLike || !ArticleId) {
+      return res
+        .status(400)
+        .json({ message: "UserID, isLike, and ArticleId is required" });
+    }
+    const article = await ArticleModal.findById(ArticleId);
+    article.ArticleLikes.set(UserId, isLike);
+    await article.save();
+    return res
+      .status(200)
+      .json({ message: "Like Updated", UpdatedArticle: article });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "requestVisiblity Error" });
+    return res.json(500).json({ message: "updateLike Error" });
+  }
+};
+
+export const AddComment = async (req, res) => {
+  try {
+    const { UserId, FirstName, ArticleId, CommentText } = req.body;
+    if (!UserId || !FirstName || !ArticleId || !CommentText) {
+      return res.status(400).json({
+        message: "UserID, username, ArticleId, CommentText is required",
+      });
+    }
+    const article = await ArticleModal.findById(ArticleId);
+    const newComment = {
+      OwnerId: UserId,
+      FirstName: FirstName,
+      CommentText: CommentText,
+      CreatedAt: new Date(),
+    };
+    article.ArticleComments = [...article.ArticleComments, newComment];
+    await article.save();
+    return res
+      .status(200)
+      .json({ message: "Comment Added!", UpdatedArticle: article });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "AddComment Error" });
+  }
+};
+
+export const DeleteComment = async (req, res) => {
+  try {
+    const { ArticleId, CommentId, UserId } = req.params;
+    const article = await ArticleModal.findById(ArticleId);
+    article.ArticleComments.filter((comment) => {
+      return (
+        comment.CommentId.toString() !== CommentId.toString() &&
+        comment.OwnerId === UserId
+      );
+    });
+    await article.save();
+    return res
+      .status(200)
+      .json({ message: "Comment Deleted!", UpdatedArticle: article });
+  } catch (error) {
+    console.log(error);
+    return res.status(200).json({ message: "DeleteComment Error" });
   }
 };
